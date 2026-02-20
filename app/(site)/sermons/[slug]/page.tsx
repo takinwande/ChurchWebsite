@@ -147,7 +147,7 @@ export default async function SermonDetailPage({ params }: SermonPageProps) {
           {relatedSermons.length > 0 && (
             <section className="mt-12" aria-label="More from this series">
               <h2 className="mb-6 text-xl font-semibold text-foreground">
-                More from "{sermon.series?.title}"
+                More from &ldquo;{sermon.series?.title}&rdquo;
               </h2>
               <div className="grid gap-4 sm:grid-cols-2">
                 {relatedSermons.slice(0, 4).map((s) => (

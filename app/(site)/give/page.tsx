@@ -31,8 +31,8 @@ export default async function GivePage() {
             Your generosity fuels our mission to worship, grow, and serve our community and beyond.
           </p>
           <p className="mb-8 text-sm text-muted-foreground leading-relaxed">
-            "Each of you should give what you have decided in your heart to give, not reluctantly or under compulsion,
-            for God loves a cheerful giver." — 2 Corinthians 9:7
+            &ldquo;Each of you should give what you have decided in your heart to give, not reluctantly or under compulsion,
+            for God loves a cheerful giver.&rdquo; — 2 Corinthians 9:7
           </p>
 
           {data?.givingUrl ? (
