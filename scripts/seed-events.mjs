@@ -85,11 +85,11 @@ const events = [
   //  FEBRUARY 2026
   // ═══════════════════════════════════════════════════════════════
 
-  // Feb 1 — Global 30-Day Fasting & Prayers (spans to Mar 2)
+  // Feb 1 — Global 30-Day Fasting & Prayers (spans to Mar 2; no specific time on calendar)
   {
     title: 'Global 30-Day Fasting & Prayers',
     start: t('2026-02-01', '00:00:00'),
-    end:   t('2026-03-02', '23:59:00'),
+    end:   t('2026-03-02', '00:00:00'),
     desc:  'Corporate 30-day church-wide fasting and prayer period.',
     featured: true,
   },
@@ -100,10 +100,10 @@ const events = [
     location: 'Prayer Line',
     desc:  'Monthly Covenant Hour of Prayer on the church prayer line.',
   },
-  // Feb 1 — Thanksgiving and Anointing Service
+  // Feb 1 — Thanksgiving and Anointing Service (no specific time on calendar)
   {
     title: 'Thanksgiving and Anointing Service',
-    start: t('2026-02-01', '10:00:00'),
+    start: t('2026-02-01', '00:00:00'),
   },
   // Feb 3 — Tuesday Fasting & Prayers
   { title: 'Tuesday Fasting & Prayers', start: t('2026-02-03', '17:00:00'), location: 'Prayer Line' },
@@ -113,24 +113,24 @@ const events = [
   { title: 'Tuesday Fasting & Prayers', start: t('2026-02-10', '17:00:00'), location: 'Prayer Line' },
   // Feb 11 — Digging Deep
   { title: 'Digging Deep', start: t('2026-02-11', '19:00:00') },
-  // Feb 13 — Quarterly Holy Ghost Service
+  // Feb 13 — Quarterly Holy Ghost Service (no specific time on calendar)
   {
     title: 'Quarterly Holy Ghost Service',
-    start: t('2026-02-13', '19:00:00'),
+    start: t('2026-02-13', '00:00:00'),
     location: 'RCCG Throne of Grace',
     featured: true,
   },
-  // Feb 14 — Regional Retreat
+  // Feb 14 — Regional Retreat (no specific time on calendar)
   {
     title: 'Regional Retreat',
-    start: t('2026-02-14', '09:00:00'),
+    start: t('2026-02-14', '00:00:00'),
     location: 'RCCG Throne of Grace',
     featured: true,
   },
-  // Feb 15 — Covenant Day of His Power
+  // Feb 15 — Covenant Day of His Power (no specific time on calendar)
   {
     title: 'Covenant Day of His Power',
-    start: t('2026-02-15', '10:00:00'),
+    start: t('2026-02-15', '00:00:00'),
     featured: true,
   },
   // Feb 17 — Tuesday Fasting & Prayers
@@ -152,9 +152,10 @@ const events = [
     start: t('2026-03-01', '05:00:00'),
     location: 'Prayer Line',
   },
+  // Mar 1 — Thanksgiving and Anointing Service (no specific time on calendar)
   {
     title: 'Thanksgiving and Anointing Service',
-    start: t('2026-03-01', '10:00:00'),
+    start: t('2026-03-01', '00:00:00'),
   },
   // Mar 3 — Tuesday Fasting & Prayers
   { title: 'Tuesday Fasting & Prayers', start: t('2026-03-03', '17:00:00'), location: 'Prayer Line' },
@@ -171,34 +172,35 @@ const events = [
     location: 'Virtual',
     desc: 'Monthly leadership meeting held virtually.',
   },
+  // Mar 14 — Family Picnic (no specific time on calendar)
   {
     title: 'Family Picnic',
-    start: t('2026-03-14', '11:00:00'),
+    start: t('2026-03-14', '00:00:00'),
     featured: true,
   },
-  // Mar 15 — Covenant Day of His Power
+  // Mar 15 — Covenant Day of His Power (no specific time on calendar)
   {
     title: 'Covenant Day of His Power',
-    start: t('2026-03-15', '10:00:00'),
+    start: t('2026-03-15', '00:00:00'),
     featured: true,
   },
   // Mar 17 — Tuesday Fasting & Prayers
   { title: 'Tuesday Fasting & Prayers', start: t('2026-03-17', '17:00:00'), location: 'Prayer Line' },
   // Mar 18 — Digging Deep
   { title: 'Digging Deep', start: t('2026-03-18', '19:00:00') },
-  // Mar 20–22 — Family Life Conference
+  // Mar 20–22 — Family Life Conference (no specific time on calendar)
   {
     title: 'Family Life Conference',
-    start: t('2026-03-20', '09:00:00'),
-    end:   t('2026-03-22', '21:00:00'),
+    start: t('2026-03-20', '00:00:00'),
+    end:   t('2026-03-22', '00:00:00'),
     desc: 'Three-day Family Life Conference — Day 3 is Family Sunday.',
     featured: true,
   },
-  // Mar 23–29 — Royal Priesthood (Men's) Week
+  // Mar 23–29 — Royal Priesthood (Men's) Week (no specific time on calendar)
   {
     title: "Royal Priesthood (Men's) Week",
-    start: t('2026-03-23', '09:00:00'),
-    end:   t('2026-03-29', '21:00:00'),
+    start: t('2026-03-23', '00:00:00'),
+    end:   t('2026-03-29', '00:00:00'),
     desc: "Week-long Royal Priesthood celebration for the men of the church, culminating in Royal Priesthood Sunday.",
     featured: true,
   },
@@ -227,16 +229,16 @@ const events = [
     location: 'Prayer Line',
   },
   { title: 'Digging Deep', start: t('2026-04-01', '19:00:00') },
-  // Apr 3 — Good Friday
+  // Apr 3 — Good Friday (no specific time on calendar)
   {
     title: 'Good Friday',
-    start: t('2026-04-03', '09:00:00'),
+    start: t('2026-04-03', '00:00:00'),
     featured: true,
   },
-  // Apr 5 — Easter Sunday — Thanksgiving and Anointing Service
+  // Apr 5 — Easter Sunday — Thanksgiving and Anointing Service (no specific time on calendar)
   {
     title: 'Easter Sunday — Thanksgiving and Anointing Service',
-    start: t('2026-04-05', '10:00:00'),
+    start: t('2026-04-05', '00:00:00'),
     featured: true,
   },
   // Apr 7 — Tuesday Fasting & Prayers
@@ -254,17 +256,17 @@ const events = [
   { title: 'Tuesday Fasting & Prayers', start: t('2026-04-14', '17:00:00'), location: 'Prayer Line' },
   // Apr 15 — Digging Deep
   { title: 'Digging Deep', start: t('2026-04-15', '19:00:00') },
-  // Apr 19 — Covenant Day of His Power
+  // Apr 19 — Covenant Day of His Power (no specific time on calendar)
   {
     title: 'Covenant Day of His Power',
-    start: t('2026-04-19', '10:00:00'),
+    start: t('2026-04-19', '00:00:00'),
     featured: true,
   },
-  // Apr 20–26 — Women of Praise (WOP) Week
+  // Apr 20–26 — Women of Praise (WOP) Week (no specific time on calendar)
   {
     title: 'Women of Praise (WOP) Week',
-    start: t('2026-04-20', '09:00:00'),
-    end:   t('2026-04-26', '21:00:00'),
+    start: t('2026-04-20', '00:00:00'),
+    end:   t('2026-04-26', '00:00:00'),
     desc: 'Week-long Women of Praise celebration, culminating in WOP Sunday.',
     featured: true,
   },
