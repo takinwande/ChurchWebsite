@@ -152,7 +152,7 @@ export default async function SermonDetailPage({ params }: SermonPageProps) {
               <div className="grid gap-4 sm:grid-cols-2">
                 {relatedSermons.slice(0, 4).map((s) => (
                   <SermonCard
-                    key={s._id}
+                    key={s.slug.current}
                     sermon={s as Sermon}
                   />
                 ))}

@@ -1,4 +1,4 @@
-import { defineConfig } from 'sanity'
+import { defineConfig, type DocumentActionComponent } from 'sanity'
 import { structureTool } from 'sanity/structure'
 import { visionTool } from '@sanity/vision'
 import { schemaTypes } from './schemaTypes'
@@ -8,7 +8,8 @@ const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET!
 
 // Singleton document IDs
 const singletonTypes = new Set(['siteSettings', 'announcement', 'planVisitPage', 'aboutPage', 'contactPage'])
-const singletonActions = (input: string[]) => input.filter((a) => a !== 'delete')
+const singletonActions = (input: DocumentActionComponent[]) =>
+  input.filter((action) => action.action !== 'delete')
 
 export default defineConfig({
   basePath: '/studio',
@@ -61,6 +62,6 @@ export default defineConfig({
   ],
   document: {
     actions: (input, { schemaType }) =>
-      singletonTypes.has(schemaType) ? singletonActions(input as string[]) : input,
+      singletonTypes.has(schemaType) ? singletonActions(input) : input,
   },
 })
