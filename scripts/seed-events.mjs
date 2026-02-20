@@ -22,16 +22,15 @@ import { createClient } from '@sanity/client'
 // ─── Sanity client ────────────────────────────────────────────────────────────
 
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID
-const token = process.env.SANITY_API_TOKEN
+const token = process.env.SANITY_API_WRITE_TOKEN ?? process.env.SANITY_API_TOKEN
 
 if (!projectId) {
   console.error('❌  NEXT_PUBLIC_SANITY_PROJECT_ID is not set. Run with --env-file=.env.local')
   process.exit(1)
 }
 if (!token) {
-  console.error('❌  SANITY_API_TOKEN is not set.')
-  console.error('    1. Go to https://sanity.io/manage/project/' + projectId + '/api')
-  console.error('    2. Create an Editor token and add it to .env.local as SANITY_API_TOKEN=sk...')
+  console.error('❌  No Sanity write token found.')
+  console.error('    Add SANITY_API_WRITE_TOKEN=sk... to .env.local and re-run.')
   process.exit(1)
 }
 
