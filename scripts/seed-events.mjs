@@ -71,9 +71,11 @@ function desc(text) {
   ]
 }
 
-// All times are Arizona local time (MST = UTC-7, no daylight saving)
-// Format: 'YYYY-MM-DDTHH:MM:SS-07:00'
-const TZ = '-07:00'
+// All times are Arizona local time (MST, UTC-7, no daylight saving).
+// We deliberately omit the timezone offset so Sanity stores the string
+// as-is and the Next.js server (UTC) formats it as the correct local
+// Phoenix date/time (e.g. "Feb 3 at 5:00 PM" rather than "Feb 4").
+const TZ = ''
 const t = (date, time) => `${date}T${time}${TZ}`
 
 // ─── Event data ───────────────────────────────────────────────────────────────
