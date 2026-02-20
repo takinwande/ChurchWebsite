@@ -16,7 +16,12 @@ export function formatDate(dateString: string, pattern = 'MMMM d, yyyy'): string
 
 export function formatDateTime(dateString: string): string {
   try {
-    return format(new Date(dateString), "EEEE, MMMM d, yyyy 'at' h:mm a")
+    const date = new Date(dateString)
+    // Midnight (00:00) signals no specific time — show date only
+    if (date.getHours() === 0 && date.getMinutes() === 0) {
+      return format(date, 'EEEE, MMMM d, yyyy')
+    }
+    return format(date, "EEEE, MMMM d, yyyy 'at' h:mm a")
   } catch {
     return dateString
   }

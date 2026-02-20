@@ -49,6 +49,12 @@ describe('formatDateTime', () => {
     expect(result).toMatch(/10:00 AM/)
   })
 
+  it('omits time when hour and minute are both zero (all-day event)', () => {
+    const result = formatDateTime('2025-06-15T00:00:00')
+    expect(result).toMatch(/June 15, 2025/)
+    expect(result).not.toMatch(/12:00 AM/)
+  })
+
   it('returns original string on invalid date', () => {
     expect(formatDateTime('bad')).toBe('bad')
   })
