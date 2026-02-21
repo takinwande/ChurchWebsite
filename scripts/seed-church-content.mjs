@@ -89,7 +89,7 @@ const aboutDoc = {
     pillarBlock(
       'pillar4',
       'Fellowship & Friendship',
-      'Expressing genuine godly love toward one another as Christ commanded.',
+      'Expressing genuine Godly love toward one another as Christ commanded.',
     ),
     pillarBlock(
       'pillar5',
@@ -158,9 +158,9 @@ const ministries = [
   {
     order: 8,
     name: 'Covenant Couples and Families',
-    tagline: 'Building godly homes',
+    tagline: 'Building Godly homes',
     description:
-      'Prepares individuals to build godly homes and fosters love and Christian virtues in marriages through workshops and training.',
+      'Prepares individuals to build Godly homes and fosters love and Christian virtues in marriages through workshops and training.',
   },
 ]
 
