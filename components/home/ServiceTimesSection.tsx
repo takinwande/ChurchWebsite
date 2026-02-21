@@ -13,7 +13,7 @@ export function ServiceTimesSection({ serviceTimes }: ServiceTimesSectionProps) 
   return (
     <section className="bg-primary py-12 text-white" aria-label="Service times">
       <div className="container mx-auto px-4">
-        <div className="flex flex-col items-center gap-6 sm:flex-row sm:justify-center sm:gap-12 lg:gap-20">
+        <div className="flex flex-col items-center gap-6 sm:flex-row sm:flex-wrap sm:justify-center sm:gap-x-10 sm:gap-y-6 lg:gap-x-16">
           <div className="flex items-center gap-3 text-white/80">
             <Clock className="h-5 w-5 shrink-0" aria-hidden="true" />
             <span className="text-sm font-semibold uppercase tracking-wider">Join Us</span>

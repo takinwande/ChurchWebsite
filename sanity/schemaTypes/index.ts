@@ -4,6 +4,7 @@ import { sermon } from './sermon'
 import { sermonSeries } from './sermonSeries'
 import { speaker } from './speaker'
 import { event } from './event'
+import { ministry } from './ministry'
 import { planVisitPage } from './planVisitPage'
 import { aboutPage } from './aboutPage'
 import { contactPage } from './contactPage'
@@ -15,6 +16,7 @@ export const schemaTypes = [
   sermonSeries,
   speaker,
   event,
+  ministry,
   planVisitPage,
   aboutPage,
   contactPage,
