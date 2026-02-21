@@ -105,6 +105,12 @@ export const GIVE_QUERY = groq`
   *[_type == "siteSettings"][0]{ givingUrl, name, tagline }
 `
 
+export const MINISTRIES_QUERY = groq`
+  *[_type == "ministry"] | order(order asc, name asc){
+    _id, name, slug, tagline, description
+  }
+`
+
 export const SITEMAP_QUERY = groq`
   {
     "sermons": *[_type == "sermon"]{ slug, date },

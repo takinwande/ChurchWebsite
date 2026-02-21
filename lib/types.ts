@@ -140,3 +140,12 @@ export interface ContactPage {
   officeHours?: string
   mapEmbedUrl?: string
 }
+
+export interface Ministry {
+  _id: string
+  name: string
+  slug: { current: string }
+  tagline?: string
+  description?: string
+  order?: number
+}
