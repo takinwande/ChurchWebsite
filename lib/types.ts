@@ -149,3 +149,15 @@ export interface Ministry {
   description?: string
   order?: number
 }
+
+export interface PastorsDesk {
+  _id: string
+  title: string
+  slug: { current: string }
+  date: string
+  scripture?: string
+  body?: PortableTextBlock[]
+  confession?: string
+  prayer?: string
+  furtherReading?: string
+}

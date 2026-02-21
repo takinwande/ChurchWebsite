@@ -111,6 +111,19 @@ export const MINISTRIES_QUERY = groq`
   }
 `
 
+export const PASTORS_DESK_QUERY = groq`
+  *[_type == "pastorsDesk"] | order(date desc){
+    _id, title, slug, date, scripture, confession,
+    body[0...1]
+  }
+`
+
+export const PASTORS_DESK_BY_SLUG_QUERY = groq`
+  *[_type == "pastorsDesk" && slug.current == $slug][0]{
+    _id, title, slug, date, scripture, body, confession, prayer, furtherReading
+  }
+`
+
 export const SITEMAP_QUERY = groq`
   {
     "sermons": *[_type == "sermon"]{ slug, date },

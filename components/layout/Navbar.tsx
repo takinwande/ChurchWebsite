@@ -13,6 +13,7 @@ const navLinks = [
   { href: '/events', label: 'Events' },
   { href: '/about', label: 'About' },
   { href: '/ministries', label: 'Ministries' },
+  { href: '/pastors-desk', label: "Pastor's Desk" },
   { href: '/contact', label: 'Contact' },
 ]
 
