@@ -56,6 +56,8 @@ export default defineConfig({
             S.documentTypeListItem('speaker').title('Speakers'),
             S.divider(),
             S.documentTypeListItem('event').title('Events'),
+            S.divider(),
+            S.documentTypeListItem('galleryAlbum').title('Gallery Albums'),
           ]),
     }),
     visionTool(),
