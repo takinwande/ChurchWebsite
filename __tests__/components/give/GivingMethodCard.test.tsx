@@ -138,5 +138,33 @@ describe('GivingMethodCard', () => {
       const link = screen.getByRole('link', { name: 'Open Cash App' })
       expect(link).toHaveAttribute('href', 'https://cash.app/$RCCGCAAZ')
     })
+
+    it('renders PayPal card with email detail, donate link, and note', () => {
+      render(
+        <GivingMethodCard
+          icon={<div data-testid="paypal-icon" />}
+          name="PayPal"
+          description="Send a gift securely through PayPal using our email address."
+          detail="admin@covenantassembly.org"
+          action={{
+            label: 'Donate via PayPal',
+            href: 'https://www.paypal.com/donate?business=admin%40covenantassembly.org',
+          }}
+          note="You can also log in to PayPal → Send & Request → enter this email address"
+        />
+      )
+      expect(screen.getByText('PayPal')).toBeInTheDocument()
+      expect(screen.getByText('admin@covenantassembly.org')).toBeInTheDocument()
+      const link = screen.getByRole('link', { name: 'Donate via PayPal' })
+      expect(link).toHaveAttribute(
+        'href',
+        'https://www.paypal.com/donate?business=admin%40covenantassembly.org'
+      )
+      expect(link).toHaveAttribute('target', '_blank')
+      expect(link).toHaveAttribute('rel', 'noopener noreferrer')
+      expect(
+        screen.getByText('You can also log in to PayPal → Send & Request → enter this email address')
+      ).toBeInTheDocument()
+    })
   })
 })

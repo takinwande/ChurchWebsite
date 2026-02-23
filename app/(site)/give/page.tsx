@@ -53,11 +53,23 @@ function CashAppIcon() {
   )
 }
 
+function PayPalIcon() {
+  return (
+    <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" width={48} height={48} aria-label="PayPal logo">
+      <rect width="40" height="40" rx="8" fill="#003087" />
+      {/* Back P (light blue) */}
+      <path d="M16 9h8a5 5 0 010 10h-5v11h-3V9z" fill="#009cde" />
+      {/* Front P (white, offset down-right) */}
+      <path d="M19 13h7a4 4 0 010 8h-4v8h-3V13z" fill="white" />
+    </svg>
+  )
+}
+
 export default function GivePage() {
   return (
     <div className="py-16 sm:py-24">
       <div className="container mx-auto px-4">
-        <div className="mx-auto max-w-4xl">
+        <div className="mx-auto max-w-5xl">
 
           {/* Header */}
           <div className="mb-12 text-center">
@@ -77,7 +89,7 @@ export default function GivePage() {
           </div>
 
           {/* Giving methods */}
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
 
             <GivingMethodCard
               icon={<ZelleIcon />}
@@ -108,6 +120,18 @@ export default function GivePage() {
                 label: 'Open Cash App',
                 href: 'https://cash.app/$RCCGCAAZ',
               }}
+            />
+
+            <GivingMethodCard
+              icon={<PayPalIcon />}
+              name="PayPal"
+              description="Send a gift securely through PayPal using our email address."
+              detail="admin@covenantassembly.org"
+              action={{
+                label: 'Donate via PayPal',
+                href: 'https://www.paypal.com/donate?business=admin%40covenantassembly.org',
+              }}
+              note="You can also log in to PayPal → Send & Request → enter this email address"
             />
 
           </div>
