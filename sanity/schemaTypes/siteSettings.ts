@@ -60,6 +60,12 @@ export const siteSettings = defineType({
     }),
     defineField({ name: 'givingUrl', title: 'Online Giving URL', type: 'url' }),
     defineField({ name: 'livestreamUrl', title: 'Livestream URL', type: 'url' }),
+    defineField({
+      name: 'notificationEmail',
+      title: 'Notification Email',
+      type: 'string',
+      description: 'Email address that receives contact and prayer request submissions. Update here — no deployment needed.',
+    }),
   ],
   preview: { select: { title: 'name' } },
 })

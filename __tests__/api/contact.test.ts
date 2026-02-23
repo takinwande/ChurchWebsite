@@ -3,6 +3,20 @@
  */
 import { POST } from '@/app/api/contact/route'
 
+jest.mock('@sanity/client', () => ({
+  createClient: () => ({
+    fetch: jest.fn().mockResolvedValue({ notificationEmail: 'test@example.com' }),
+  }),
+}))
+
+jest.mock('resend', () => ({
+  Resend: jest.fn().mockImplementation(() => ({
+    emails: {
+      send: jest.fn().mockResolvedValue({ id: 'test-id' }),
+    },
+  })),
+}))
+
 function makeRequest(body: Record<string, unknown>) {
   return new Request('http://localhost/api/contact', {
     method: 'POST',
