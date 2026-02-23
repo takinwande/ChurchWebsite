@@ -149,7 +149,7 @@ const ministries = [
       'Prepares individuals to build Godly homes and fosters love and Christian virtues in marriages through workshops and training.',
   },
   {
-    order: 4,
+    order: 7,
     name: 'Outreach',
     tagline: 'Meeting community needs through action',
     description:
