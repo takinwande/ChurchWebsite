@@ -29,7 +29,7 @@ export function GivingMethodCard({
       <h2 className="mb-2 text-xl font-bold text-foreground">{name}</h2>
       <p className="mb-5 text-sm text-muted-foreground leading-relaxed">{description}</p>
 
-      <p className="mb-5 rounded-lg bg-muted px-4 py-2 font-mono text-base font-semibold text-foreground">
+      <p className="mb-5 rounded-lg bg-muted px-4 py-2 font-mono text-base font-semibold text-foreground break-all">
         {detail}
       </p>
 
