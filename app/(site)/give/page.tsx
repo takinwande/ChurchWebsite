@@ -1,4 +1,6 @@
 import type { Metadata } from 'next'
+import type { SimpleIcon } from 'simple-icons'
+import { siZelle, siCashapp, siPaypal } from 'simple-icons'
 import { Heart } from 'lucide-react'
 import { GivingMethodCard } from '@/components/give/GivingMethodCard'
 
@@ -7,60 +9,31 @@ export const metadata: Metadata = {
   description: 'Support the ministry of RCCG Covenant Assembly through your generous giving.',
 }
 
-function ZelleIcon() {
+// Renders an official brand logo (from simple-icons) as a white mark
+// on a brand-coloured rounded square. simple-icons use a 24×24 viewBox;
+// translate(8,8) centres that exactly inside our 40×40 container.
+function BrandIcon({ icon, label }: { icon: SimpleIcon; label: string }) {
   return (
-    <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" width={48} height={48} aria-label="Zelle logo">
-      <rect width="40" height="40" rx="8" fill="#6D1ED4" />
-      {/* Z: top bar → diagonal → bottom bar */}
-      <path
-        d="M11 13h18M29 13 11 27M11 27h18"
-        stroke="white"
-        strokeWidth="2.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+    <svg viewBox="0 0 40 40" width={48} height={48} aria-label={label} xmlns="http://www.w3.org/2000/svg">
+      <rect width="40" height="40" rx="8" fill={`#${icon.hex}`} />
+      <g transform="translate(8, 8)">
+        <path d={icon.path} fill="white" />
+      </g>
     </svg>
   )
 }
 
+// Givelify is not in simple-icons — using their actual heart logomark
 function GivelifyIcon() {
   return (
-    <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" width={48} height={48} aria-label="Givelify logo">
+    <svg viewBox="0 0 40 40" width={48} height={48} aria-label="Givelify logo" xmlns="http://www.w3.org/2000/svg">
       <rect width="40" height="40" rx="8" fill="#01B4AA" />
-      {/* Heart shape representing generosity */}
-      <path
-        d="M20 29C20 29 9 22.5 9 16a6 6 0 0111-3.35A6 6 0 0131 16c0 6.5-11 13-11 13z"
-        fill="white"
-      />
-    </svg>
-  )
-}
-
-function CashAppIcon() {
-  return (
-    <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" width={48} height={48} aria-label="Cash App logo">
-      <rect width="40" height="40" rx="8" fill="#00D632" />
-      {/* Dollar sign: vertical bar + S-curve */}
-      <path d="M20 9v22" stroke="white" strokeWidth="2.2" strokeLinecap="round" />
-      <path
-        d="M24.5 15c0-2.5-2-4.5-4.5-4.5S15.5 12.5 15.5 15s2 4 4.5 5 4.5 2.5 4.5 5-2 4.5-4.5 4.5-4.5-2-4.5-4.5"
-        stroke="white"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-        fill="none"
-      />
-    </svg>
-  )
-}
-
-function PayPalIcon() {
-  return (
-    <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" width={48} height={48} aria-label="PayPal logo">
-      <rect width="40" height="40" rx="8" fill="#003087" />
-      {/* Back P (light blue) */}
-      <path d="M16 9h8a5 5 0 010 10h-5v11h-3V9z" fill="#009cde" />
-      {/* Front P (white, offset down-right) */}
-      <path d="M19 13h7a4 4 0 010 8h-4v8h-3V13z" fill="white" />
+      <g transform="translate(8, 8)">
+        <path
+          d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402z"
+          fill="white"
+        />
+      </g>
     </svg>
   )
 }
@@ -92,7 +65,7 @@ export default function GivePage() {
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
 
             <GivingMethodCard
-              icon={<ZelleIcon />}
+              icon={<BrandIcon icon={siZelle} label="Zelle logo" />}
               name="Zelle"
               description="Send a gift directly from your bank app — fast, free, and secure."
               detail="admin@covenantassembly.org"
@@ -112,7 +85,7 @@ export default function GivePage() {
             />
 
             <GivingMethodCard
-              icon={<CashAppIcon />}
+              icon={<BrandIcon icon={siCashapp} label="Cash App logo" />}
               name="Cash App"
               description="Send a gift instantly using our Cash App $Cashtag."
               detail="$RCCGCAAZ"
@@ -123,7 +96,7 @@ export default function GivePage() {
             />
 
             <GivingMethodCard
-              icon={<PayPalIcon />}
+              icon={<BrandIcon icon={siPaypal} label="PayPal logo" />}
               name="PayPal"
               description="Send a gift securely through PayPal using our email address."
               detail="admin@covenantassembly.org"
