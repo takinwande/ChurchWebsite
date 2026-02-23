@@ -152,3 +152,19 @@ export interface Ministry {
   description?: string
   order?: number
 }
+
+export interface GalleryPhoto extends SanityImage {
+  url?: string
+}
+
+export interface GalleryAlbum {
+  _id: string
+  title: string
+  slug: { current: string }
+  date: string
+  description?: string
+  coverImage?: SanityImage
+  coverImageUrl?: string
+  photos?: GalleryPhoto[]
+  photoCount?: number
+}

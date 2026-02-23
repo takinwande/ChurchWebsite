@@ -112,9 +112,27 @@ export const MINISTRIES_QUERY = groq`
   }
 `
 
+export const GALLERY_ALBUMS_QUERY = groq`
+  *[_type == "galleryAlbum"] | order(date desc) {
+    _id, title, slug, date, description,
+    "coverImageUrl": coverImage.asset->url,
+    "photoCount": count(photos)
+  }
+`
+
+export const GALLERY_ALBUM_QUERY = groq`
+  *[_type == "galleryAlbum" && slug.current == $slug][0] {
+    _id, title, slug, date, description,
+    coverImage,
+    "coverImageUrl": coverImage.asset->url,
+    "photos": photos[]{ ..., "url": asset->url }
+  }
+`
+
 export const SITEMAP_QUERY = groq`
   {
     "sermons": *[_type == "sermon"]{ slug, date },
-    "events": *[_type == "event"]{ slug, startDateTime }
+    "events": *[_type == "event"]{ slug, startDateTime },
+    "galleryAlbums": *[_type == "galleryAlbum"]{ slug, date }
   }
 `
