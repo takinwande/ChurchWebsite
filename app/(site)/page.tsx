@@ -34,6 +34,7 @@ export default async function HomePage() {
         name={churchName}
         tagline={settings?.tagline}
         livestreamUrl={settings?.livestreamUrl}
+        heroImages={settings?.heroImages}
       />
       <ServiceTimesSection serviceTimes={serviceTimes} />
       <LatestSermon sermon={latestSermon} />

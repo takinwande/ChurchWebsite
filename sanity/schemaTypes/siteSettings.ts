@@ -47,6 +47,17 @@ export const siteSettings = defineType({
         defineField({ name: 'tiktok', type: 'url', title: 'TikTok URL' }),
       ],
     }),
+    defineField({
+      name: 'heroImages',
+      title: 'Hero Carousel Images',
+      type: 'array',
+      description: 'Upload 4–6 photos for the homepage carousel. Displayed in order.',
+      of: [{
+        type: 'image',
+        options: { hotspot: true },
+        fields: [defineField({ name: 'alt', type: 'string', title: 'Alt text' })],
+      }],
+    }),
     defineField({ name: 'givingUrl', title: 'Online Giving URL', type: 'url' }),
     defineField({ name: 'livestreamUrl', title: 'Livestream URL', type: 'url' }),
   ],
