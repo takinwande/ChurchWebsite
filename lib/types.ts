@@ -2,6 +2,8 @@ import type { PortableTextBlock } from '@portabletext/react'
 
 export interface SanityImage {
   _type: 'image'
+  _key?: string
+  alt?: string
   asset: { _ref: string; _type: 'reference' }
   hotspot?: { x: number; y: number; width: number; height: number }
 }
@@ -36,6 +38,7 @@ export interface SiteSettings {
   email?: string
   serviceTimes?: ServiceTime[]
   socialLinks?: SocialLinks
+  heroImages?: SanityImage[]
   givingUrl?: string
   livestreamUrl?: string
 }

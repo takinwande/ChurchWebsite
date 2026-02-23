@@ -3,7 +3,8 @@ import { groq } from 'next-sanity'
 export const SITE_SETTINGS_QUERY = groq`
   *[_type == "siteSettings"][0]{
     _id, name, tagline, logo, address, phone, email,
-    serviceTimes, socialLinks, givingUrl, livestreamUrl
+    serviceTimes, socialLinks, givingUrl, livestreamUrl,
+    heroImages
   }
 `
 
