@@ -157,7 +157,16 @@ const ministries = [
   },
 ]
 
-// ─── C) Service Times ─────────────────────────────────────────────────────────
+// ─── C) Social Links ──────────────────────────────────────────────────────────
+
+const socialLinks = {
+  facebook:  'https://www.facebook.com/CovenantAssemblyAZ',
+  instagram: 'https://www.instagram.com/covenantassemblyrccg',
+  youtube:   'https://www.youtube.com/@rccgcovenantassemblyavonda5028',
+  tiktok:    'https://www.tiktok.com/@covenantassemblyaz',
+}
+
+// ─── D) Service Times ─────────────────────────────────────────────────────────
 
 const serviceTimes = [
   { _key: 'st1', name: 'Fresh Oil Service',            day: 'Sunday',     time: '9:00 AM'  },
@@ -203,14 +212,14 @@ async function main() {
     }
   }
 
-  // ── C) Service times ──
-  console.log('\n🕐  Updating service times in siteSettings…')
+  // ── C/D) Social links + service times ──
+  console.log('\n📱  Updating social links and service times in siteSettings…')
   try {
     const existing = await client.fetch("*[_type == 'siteSettings'][0]{ _id }")
     if (existing?._id) {
       // Patch existing document — preserve all other fields
-      await client.patch(existing._id).set({ serviceTimes }).commit()
-      console.log(`  ✅  siteSettings patched — ${serviceTimes.length} service times updated`)
+      await client.patch(existing._id).set({ serviceTimes, socialLinks }).commit()
+      console.log(`  ✅  siteSettings patched — ${serviceTimes.length} service times and social links updated`)
     } else {
       // No siteSettings doc yet — create one with full church info
       await client.createOrReplace({
@@ -226,9 +235,7 @@ async function main() {
         },
         phone: '6234195650',
         email: 'admin@covenantassembly.org',
-        socialLinks: {
-          youtube: 'https://www.youtube.com/@rccgcovenantassemblyavonda5028',
-        },
+        socialLinks,
         serviceTimes,
       })
       console.log(`  ✅  siteSettings created — ${serviceTimes.length} service times set`)

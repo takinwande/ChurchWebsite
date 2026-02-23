@@ -16,7 +16,7 @@ export interface SocialLinks {
   facebook?: string
   instagram?: string
   youtube?: string
-  twitter?: string
+  tiktok?: string
 }
 
 export interface Address {

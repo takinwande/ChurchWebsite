@@ -19,7 +19,7 @@ const fullSettings: SiteSettings = {
     facebook: 'https://facebook.com/church',
     instagram: 'https://instagram.com/church',
     youtube: 'https://youtube.com/church',
-    twitter: 'https://twitter.com/church',
+    tiktok: 'https://tiktok.com/@church',
   },
 }
 
@@ -93,17 +93,36 @@ describe('Footer', () => {
     )
   })
 
-  it('renders X / Twitter social link when present', () => {
+  it('renders TikTok social link when present', () => {
     render(<Footer settings={fullSettings} />)
-    expect(screen.getByRole('link', { name: 'X / Twitter' })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: 'TikTok' })).toHaveAttribute(
       'href',
-      'https://twitter.com/church'
+      'https://tiktok.com/@church'
     )
   })
 
-  it('does not render social links when settings.socialLinks is absent', () => {
+  it('opens social links in a new tab with noopener noreferrer', () => {
+    render(<Footer settings={fullSettings} />)
+    const link = screen.getByRole('link', { name: 'Facebook' })
+    expect(link).toHaveAttribute('target', '_blank')
+    expect(link).toHaveAttribute('rel', 'noopener noreferrer')
+  })
+
+  it('renders the Follow Us heading when social links are present', () => {
+    render(<Footer settings={fullSettings} />)
+    expect(screen.getByText('Follow Us on Social Media')).toBeInTheDocument()
+  })
+
+  it('does not render the Follow Us section when socialLinks is undefined', () => {
     render(<Footer settings={{ ...fullSettings, socialLinks: undefined }} />)
+    expect(screen.queryByText('Follow Us on Social Media')).not.toBeInTheDocument()
     expect(screen.queryByRole('link', { name: 'Facebook' })).not.toBeInTheDocument()
+  })
+
+  it('does not render a social link for a platform with no URL', () => {
+    render(<Footer settings={{ ...fullSettings, socialLinks: { youtube: 'https://youtube.com/church' } }} />)
+    expect(screen.queryByRole('link', { name: 'Facebook' })).not.toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'YouTube' })).toBeInTheDocument()
   })
 
   it('renders provided service times in the footer', () => {

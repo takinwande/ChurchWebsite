@@ -44,7 +44,7 @@ export const siteSettings = defineType({
         defineField({ name: 'facebook', type: 'url', title: 'Facebook URL' }),
         defineField({ name: 'instagram', type: 'url', title: 'Instagram URL' }),
         defineField({ name: 'youtube', type: 'url', title: 'YouTube URL' }),
-        defineField({ name: 'twitter', type: 'url', title: 'X / Twitter URL' }),
+        defineField({ name: 'tiktok', type: 'url', title: 'TikTok URL' }),
       ],
     }),
     defineField({ name: 'givingUrl', title: 'Online Giving URL', type: 'url' }),
