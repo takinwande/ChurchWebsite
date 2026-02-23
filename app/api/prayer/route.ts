@@ -1,5 +1,8 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@sanity/client'
+import { Resend } from 'resend'
+
+const ADMIN_EMAIL = 'admin@covenantassembly.org'
 
 interface PrayerRequestBody {
   name: string
@@ -37,6 +40,25 @@ export async function POST(req: Request) {
       isAnonymous: Boolean(isAnonymous),
       submittedAt: new Date().toISOString(),
       status: 'new',
+    })
+
+    const resend = new Resend(process.env.RESEND_API_KEY)
+    const displayName = isAnonymous ? 'Anonymous' : name.trim()
+
+    await resend.emails.send({
+      from: 'RCCG Covenant Assembly <noreply@covenantassembly.org>',
+      to: ADMIN_EMAIL,
+      subject: `[Prayer Request] New request from ${displayName}`,
+      text: [
+        `New prayer request received`,
+        ``,
+        `From: ${displayName}`,
+        email?.trim() ? `Email: ${email.trim()}` : `Email: not provided`,
+        `Anonymous: ${isAnonymous ? 'Yes' : 'No'}`,
+        ``,
+        `Prayer Request:`,
+        request.trim(),
+      ].join('\n'),
     })
 
     return NextResponse.json({ success: true })

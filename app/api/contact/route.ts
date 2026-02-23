@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { Resend } from 'resend'
 
 interface ContactBody {
   name: string
@@ -6,6 +7,8 @@ interface ContactBody {
   subject: string
   message: string
 }
+
+const ADMIN_EMAIL = 'admin@covenantassembly.org'
 
 export async function POST(req: Request) {
   try {
@@ -22,30 +25,15 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Invalid email address.' }, { status: 400 })
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // TODO: Wire up a real email provider here.
-    //
-    // Option A — Resend (recommended):
-    //   1. npm install resend
-    //   2. Add RESEND_API_KEY to .env.local
-    //   3. Replace the console.log below with:
-    //
-    //   import { Resend } from 'resend'
-    //   const resend = new Resend(process.env.RESEND_API_KEY)
-    //   await resend.emails.send({
-    //     from: 'website@yourdomain.com',          // must match a verified Resend domain
-    //     to: 'admin@covenantassembly.org',
-    //     replyTo: email,
-    //     subject: `[Website] ${subject}`,
-    //     text: `Name: ${name}\nEmail: ${email}\n\n${message}`,
-    //   })
-    //
-    // Option B — Nodemailer via SMTP:
-    //   npm install nodemailer @types/nodemailer
-    //   Use SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS env vars.
-    // ─────────────────────────────────────────────────────────────────────────
+    const resend = new Resend(process.env.RESEND_API_KEY)
 
-    console.log('[Contact form submission]', { name, email, subject, message })
+    await resend.emails.send({
+      from: 'RCCG Covenant Assembly <noreply@covenantassembly.org>',
+      to: ADMIN_EMAIL,
+      replyTo: email,
+      subject: `[Contact] ${subject}`,
+      text: `New contact form submission from ${name}\n\nFrom: ${name}\nEmail: ${email}\nSubject: ${subject}\n\nMessage:\n${message}`,
+    })
 
     return NextResponse.json({ success: true })
   } catch (err) {
