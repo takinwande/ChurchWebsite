@@ -122,45 +122,38 @@ const ministries = [
   },
   {
     order: 3,
-    name: 'Outreach',
-    tagline: 'Meeting community needs through action',
-    description:
-      'Mobilizes congregants to meet physical community needs including food distribution, clothing assistance, medical services, and school supply provision.',
-  },
-  {
-    order: 4,
-    name: 'Discipleship and Church Growth',
-    tagline: 'Fulfilling the Great Commission',
-    description:
-      'Handles the Christian mandate of evangelism, discipleship, and church growth — focusing on soul salvation and making disciples.',
-  },
-  {
-    order: 5,
     name: 'The Chosen Vessels',
     tagline: 'Youth and singles empowered for purpose',
     description:
       'Youth and singles ministry organizing workshops, trainings, and seminars to help young adults realize their potential and fulfill their destinies.',
   },
   {
-    order: 6,
+    order: 4,
     name: 'The Chosen Generation',
     tagline: 'Preparing teenagers for their future',
     description:
       'Prepares teenagers spiritually, mentally, and academically for their future careers and ministries. A leadership and family training ground.',
   },
   {
-    order: 7,
+    order: 5,
     name: "The King's Heritage",
     tagline: 'Nurturing children in the faith',
     description:
       'Focuses on the spiritual development of children and their preparation for their God-given future.',
   },
   {
-    order: 8,
+    order: 6,
     name: 'Covenant Couples and Families',
     tagline: 'Building Godly homes',
     description:
       'Prepares individuals to build Godly homes and fosters love and Christian virtues in marriages through workshops and training.',
+  },
+  {
+    order: 4,
+    name: 'Outreach',
+    tagline: 'Meeting community needs through action',
+    description:
+      'Mobilizes congregants to meet physical community needs including food distribution, clothing assistance, medical services, and school supply provision.',
   },
 ]
 
@@ -171,8 +164,6 @@ const serviceTimes = [
   { _key: 'st2', name: 'Sunday School',                day: 'Sunday',     time: '9:30 AM'  },
   { _key: 'st3', name: 'Sunday Worship',               day: 'Sunday',     time: '10:00 AM' },
   { _key: 'st4', name: 'Bible Study (Digging Deep)',   day: 'Wednesday',  time: '7:00 PM'  },
-  { _key: 'st5', name: 'Breakfast Meeting',            day: '2nd Friday', time: '9:00 AM'  },
-  { _key: 'st6', name: 'Covenant Hours of Encounter',  day: '3rd Friday', time: '8:00 PM'  },
 ]
 
 // ─── Run ──────────────────────────────────────────────────────────────────────
