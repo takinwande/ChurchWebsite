@@ -1,10 +1,31 @@
 import { NextResponse } from 'next/server'
+import { createClient } from '@sanity/client'
+import { Resend } from 'resend'
 
 interface ContactBody {
   name: string
   email: string
   subject: string
   message: string
+}
+
+const FALLBACK_EMAIL = 'admin@covenantassembly.org'
+
+async function getNotificationEmail(): Promise<string> {
+  try {
+    const client = createClient({
+      projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
+      dataset: process.env.NEXT_PUBLIC_SANITY_DATASET!,
+      apiVersion: '2024-01-01',
+      useCdn: false,
+    })
+    const settings = await client.fetch<{ notificationEmail?: string }>(
+      `*[_type == "siteSettings"][0]{ notificationEmail }`
+    )
+    return settings?.notificationEmail?.trim() || FALLBACK_EMAIL
+  } catch {
+    return FALLBACK_EMAIL
+  }
 }
 
 export async function POST(req: Request) {
@@ -22,30 +43,18 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Invalid email address.' }, { status: 400 })
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // TODO: Wire up a real email provider here.
-    //
-    // Option A — Resend (recommended):
-    //   1. npm install resend
-    //   2. Add RESEND_API_KEY to .env.local
-    //   3. Replace the console.log below with:
-    //
-    //   import { Resend } from 'resend'
-    //   const resend = new Resend(process.env.RESEND_API_KEY)
-    //   await resend.emails.send({
-    //     from: 'website@yourdomain.com',          // must match a verified Resend domain
-    //     to: 'admin@covenantassembly.org',
-    //     replyTo: email,
-    //     subject: `[Website] ${subject}`,
-    //     text: `Name: ${name}\nEmail: ${email}\n\n${message}`,
-    //   })
-    //
-    // Option B — Nodemailer via SMTP:
-    //   npm install nodemailer @types/nodemailer
-    //   Use SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS env vars.
-    // ─────────────────────────────────────────────────────────────────────────
+    const [notificationEmail, resend] = await Promise.all([
+      getNotificationEmail(),
+      Promise.resolve(new Resend(process.env.RESEND_API_KEY)),
+    ])
 
-    console.log('[Contact form submission]', { name, email, subject, message })
+    await resend.emails.send({
+      from: 'onboarding@resend.dev',
+      to: notificationEmail,
+      replyTo: email,
+      subject: `[Contact] ${subject}`,
+      text: `New contact form submission from ${name}\n\nFrom: ${name}\nEmail: ${email}\nSubject: ${subject}\n\nMessage:\n${message}`,
+    })
 
     return NextResponse.json({ success: true })
   } catch (err) {

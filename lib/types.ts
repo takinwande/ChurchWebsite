@@ -41,6 +41,7 @@ export interface SiteSettings {
   heroImages?: SanityImage[]
   givingUrl?: string
   livestreamUrl?: string
+  notificationEmail?: string
 }
 
 export interface Announcement {
