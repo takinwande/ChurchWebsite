@@ -13,12 +13,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/about`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
     { url: `${BASE_URL}/contact`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE_URL}/give`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${BASE_URL}/gallery`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 },
   ]
 
   try {
     const data = await client.fetch<{
       sermons: { slug: { current: string }; date: string }[]
       events: { slug: { current: string }; startDateTime: string }[]
+      galleryAlbums: { slug: { current: string }; date: string }[]
     }>(SITEMAP_QUERY)
 
     const sermonRoutes: MetadataRoute.Sitemap = (data?.sermons ?? []).map((s) => ({
@@ -35,7 +37,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.7,
     }))
 
-    return [...staticRoutes, ...sermonRoutes, ...eventRoutes]
+    const galleryRoutes: MetadataRoute.Sitemap = (data?.galleryAlbums ?? []).map((a) => ({
+      url: `${BASE_URL}/gallery/${a.slug.current}`,
+      lastModified: new Date(a.date),
+      changeFrequency: 'monthly',
+      priority: 0.6,
+    }))
+
+    return [...staticRoutes, ...sermonRoutes, ...eventRoutes, ...galleryRoutes]
   } catch {
     return staticRoutes
   }

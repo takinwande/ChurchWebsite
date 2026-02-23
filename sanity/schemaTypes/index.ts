@@ -8,6 +8,7 @@ import { ministry } from './ministry'
 import { planVisitPage } from './planVisitPage'
 import { aboutPage } from './aboutPage'
 import { contactPage } from './contactPage'
+import { galleryAlbum } from './galleryAlbum'
 
 export const schemaTypes = [
   siteSettings,
@@ -20,4 +21,5 @@ export const schemaTypes = [
   planVisitPage,
   aboutPage,
   contactPage,
+  galleryAlbum,
 ]

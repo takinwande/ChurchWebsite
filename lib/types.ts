@@ -2,6 +2,8 @@ import type { PortableTextBlock } from '@portabletext/react'
 
 export interface SanityImage {
   _type: 'image'
+  _key?: string
+  alt?: string
   asset: { _ref: string; _type: 'reference' }
   hotspot?: { x: number; y: number; width: number; height: number }
 }
@@ -148,4 +150,20 @@ export interface Ministry {
   tagline?: string
   description?: string
   order?: number
+}
+
+export interface GalleryPhoto extends SanityImage {
+  url?: string
+}
+
+export interface GalleryAlbum {
+  _id: string
+  title: string
+  slug: { current: string }
+  date: string
+  description?: string
+  coverImage?: SanityImage
+  coverImageUrl?: string
+  photos?: GalleryPhoto[]
+  photoCount?: number
 }
