@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -24,6 +25,14 @@ export function Navbar() {
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         {/* Logo / Name */}
         <Link href="/" className="flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md">
+          <Image
+            src="/logo.jpg"
+            alt=""
+            width={44}
+            height={44}
+            className="rounded-sm object-contain"
+            priority
+          />
           <span className="text-lg font-bold text-primary leading-tight">
             RCCG{' '}
             <span className="hidden sm:inline">Covenant Assembly</span>

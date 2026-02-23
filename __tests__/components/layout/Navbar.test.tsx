@@ -21,6 +21,14 @@ describe('Navbar', () => {
     expect(logoLink).toHaveAttribute('href', '/')
   })
 
+  it('renders the church logo image inside the brand link', () => {
+    render(<Navbar />)
+    const logoLink = screen.getByRole('link', { name: /rccg/i })
+    const img = logoLink.querySelector('img')
+    expect(img).toBeInTheDocument()
+    expect(img).toHaveAttribute('src', '/logo.jpg')
+  })
+
   it('renders all desktop navigation links', () => {
     render(<Navbar />)
     const labels = ['Home', 'Plan a Visit', 'Sermons', 'Events', 'About', 'Contact']

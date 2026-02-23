@@ -29,6 +29,12 @@ describe('Footer', () => {
     expect(screen.getByText('RCCG Covenant Assembly')).toBeInTheDocument()
   })
 
+  it('renders the church logo image', () => {
+    render(<Footer settings={null} />)
+    const img = document.querySelector('img[src="/logo.jpg"]')
+    expect(img).toBeInTheDocument()
+  })
+
   it('renders the provided address when settings.address is populated', () => {
     render(<Footer settings={fullSettings} />)
     expect(screen.getByText(/123 Main St/)).toBeInTheDocument()

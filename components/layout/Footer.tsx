@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { Facebook, Instagram, Youtube, Twitter, MapPin, Phone, Mail } from 'lucide-react'
 import type { SiteSettings } from '@/lib/types'
 import { formatPhoneNumber } from '@/lib/utils'
@@ -33,6 +34,13 @@ export function Footer({ settings }: FooterProps) {
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {/* Church info */}
           <div className="lg:col-span-2">
+            <Image
+              src="/logo.jpg"
+              alt=""
+              width={72}
+              height={72}
+              className="mb-3 rounded-sm object-contain"
+            />
             <p className="text-lg font-bold text-primary mb-1">RCCG Covenant Assembly</p>
             <p className="text-xs text-muted-foreground mb-4">
               The Redeemed Christian Church of God
