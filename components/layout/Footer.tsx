@@ -1,6 +1,8 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { Facebook, Instagram, Youtube, Twitter, MapPin, Phone, Mail } from 'lucide-react'
+import type { SimpleIcon } from 'simple-icons'
+import { siFacebook, siInstagram, siYoutube, siTiktok } from 'simple-icons'
+import { MapPin, Phone, Mail } from 'lucide-react'
 import type { SiteSettings } from '@/lib/types'
 import { formatPhoneNumber } from '@/lib/utils'
 
@@ -18,6 +20,24 @@ const navLinks = [
   { href: '/contact', label: 'Contact' },
 ]
 
+const socialPlatforms: { key: keyof NonNullable<SiteSettings['socialLinks']>; icon: SimpleIcon; label: string }[] = [
+  { key: 'facebook',  icon: siFacebook,  label: 'Facebook'  },
+  { key: 'instagram', icon: siInstagram, label: 'Instagram' },
+  { key: 'youtube',   icon: siYoutube,   label: 'YouTube'   },
+  { key: 'tiktok',    icon: siTiktok,    label: 'TikTok'    },
+]
+
+function SocialIcon({ icon }: { icon: SimpleIcon }) {
+  return (
+    <svg viewBox="0 0 40 40" width={40} height={40} aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <rect width="40" height="40" rx="8" fill={`#${icon.hex}`} />
+      <g transform="translate(8, 8)">
+        <path d={icon.path} fill="white" />
+      </g>
+    </svg>
+  )
+}
+
 export function Footer({ settings }: FooterProps) {
   const address = settings?.address
   const addressString = address
@@ -27,6 +47,9 @@ export function Footer({ settings }: FooterProps) {
     : '755 North 114th Avenue\nAvondale, AZ 85323'
 
   const socials = settings?.socialLinks
+  const activeSocials = socials
+    ? socialPlatforms.filter(({ key }) => socials[key])
+    : []
 
   return (
     <footer className="border-t border-border bg-slate-50">
@@ -69,31 +92,6 @@ export function Footer({ settings }: FooterProps) {
                 </div>
               )}
             </div>
-            {/* Social links */}
-            {socials && (
-              <div className="mt-4 flex gap-3">
-                {socials.facebook && (
-                  <a href={socials.facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="text-muted-foreground hover:text-primary transition-colors">
-                    <Facebook className="h-5 w-5" />
-                  </a>
-                )}
-                {socials.instagram && (
-                  <a href={socials.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="text-muted-foreground hover:text-primary transition-colors">
-                    <Instagram className="h-5 w-5" />
-                  </a>
-                )}
-                {socials.youtube && (
-                  <a href={socials.youtube} target="_blank" rel="noopener noreferrer" aria-label="YouTube" className="text-muted-foreground hover:text-primary transition-colors">
-                    <Youtube className="h-5 w-5" />
-                  </a>
-                )}
-                {socials.twitter && (
-                  <a href={socials.twitter} target="_blank" rel="noopener noreferrer" aria-label="X / Twitter" className="text-muted-foreground hover:text-primary transition-colors">
-                    <Twitter className="h-5 w-5" />
-                  </a>
-                )}
-              </div>
-            )}
           </div>
 
           {/* Quick links */}
@@ -129,7 +127,29 @@ export function Footer({ settings }: FooterProps) {
           </div>
         </div>
 
-        <div className="mt-10 border-t border-border pt-6 text-center text-xs text-muted-foreground">
+        {/* Follow Us banner */}
+        {activeSocials.length > 0 && (
+          <div className="mt-10 border-t border-border pt-8 text-center">
+            <p className="mb-5 text-sm font-semibold text-foreground">Follow Us on Social Media</p>
+            <div className="flex justify-center gap-6">
+              {activeSocials.map(({ key, icon, label }) => (
+                <a
+                  key={key}
+                  href={socials![key]}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                  className="flex flex-col items-center gap-1.5 transition-opacity hover:opacity-80"
+                >
+                  <SocialIcon icon={icon} />
+                  <span className="text-xs text-muted-foreground">{label}</span>
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <div className="mt-8 border-t border-border pt-6 text-center text-xs text-muted-foreground">
           <p>
             © {new Date().getFullYear()} The Redeemed Christian Church of God Covenant Assembly. All rights reserved.
           </p>
