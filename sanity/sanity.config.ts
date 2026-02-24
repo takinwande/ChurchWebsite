@@ -56,6 +56,7 @@ export default defineConfig({
             S.documentTypeListItem('speaker').title('Speakers'),
             S.divider(),
             S.documentTypeListItem('event').title('Events'),
+            S.documentTypeListItem('programFlier').title('Program Fliers'),
             S.documentTypeListItem('ministry').title('Ministries'),
             S.divider(),
             S.documentTypeListItem('galleryAlbum').title('Gallery Albums'),
