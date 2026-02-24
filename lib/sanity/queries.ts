@@ -129,6 +129,14 @@ export const GALLERY_ALBUM_QUERY = groq`
   }
 `
 
+export const ACTIVE_FLIERS_QUERY = groq`
+  *[_type == "programFlier" && expiresAt > $now]
+  | order(order asc, expiresAt asc)
+  [0...10]{
+    _id, title, image, "imageUrl": image.asset->url, expiresAt, order
+  }
+`
+
 export const SITEMAP_QUERY = groq`
   {
     "sermons": *[_type == "sermon"]{ slug, date },

@@ -10,6 +10,7 @@ import { aboutPage } from './aboutPage'
 import { contactPage } from './contactPage'
 import { galleryAlbum } from './galleryAlbum'
 import { prayerRequest } from './prayerRequest'
+import { programFlier } from './programFlier'
 
 export const schemaTypes = [
   siteSettings,
@@ -24,4 +25,5 @@ export const schemaTypes = [
   contactPage,
   galleryAlbum,
   prayerRequest,
+  programFlier,
 ]

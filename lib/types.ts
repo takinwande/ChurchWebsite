@@ -169,3 +169,12 @@ export interface GalleryAlbum {
   photos?: GalleryPhoto[]
   photoCount?: number
 }
+
+export interface ProgramFlier {
+  _id: string
+  title: string
+  image: SanityImage
+  imageUrl: string
+  expiresAt: string
+  order?: number
+}
