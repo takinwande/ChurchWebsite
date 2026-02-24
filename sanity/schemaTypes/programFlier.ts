@@ -54,15 +54,7 @@ export const programFlier = defineType({
       media: 'image',
       expiresAt: 'expiresAt',
     },
-    prepare({
-      title,
-      media,
-      expiresAt,
-    }: {
-      title?: string
-      media?: unknown
-      expiresAt?: string
-    }) {
+    prepare({ title, media, expiresAt }) {
       const expiry = expiresAt
         ? new Date(expiresAt).toLocaleDateString('en-US', {
             month: 'short',
