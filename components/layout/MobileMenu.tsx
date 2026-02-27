@@ -44,7 +44,7 @@ export function MobileMenu() {
               href={href}
               onClick={() => setOpen(false)}
               className={cn(
-                'touch-manipulation rounded-md px-3 py-2.5 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground',
+                'touch-manipulation rounded-md px-3 py-3 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground',
                 pathname === href ? 'bg-primary/10 text-primary font-semibold' : 'text-foreground'
               )}
             >
