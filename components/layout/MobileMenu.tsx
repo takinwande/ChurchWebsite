@@ -29,7 +29,7 @@ export function MobileMenu() {
       <button
         aria-label="Open navigation menu"
         onClick={() => setOpen(true)}
-        className="rounded-md p-2 text-foreground hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring lg:hidden"
+        className="touch-manipulation rounded-md p-2 text-foreground hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring lg:hidden"
       >
         <Menu className="h-5 w-5" />
       </button>
@@ -44,14 +44,14 @@ export function MobileMenu() {
               href={href}
               onClick={() => setOpen(false)}
               className={cn(
-                'rounded-md px-3 py-2.5 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground',
+                'touch-manipulation rounded-md px-3 py-2.5 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground',
                 pathname === href ? 'bg-primary/10 text-primary font-semibold' : 'text-foreground'
               )}
             >
               {label}
             </Link>
           ))}
-          <Link href="/give" onClick={() => setOpen(false)}>
+          <Link href="/give" onClick={() => setOpen(false)} className="touch-manipulation">
             <Button className="mt-4 w-full" size="default">
               Give
             </Button>
