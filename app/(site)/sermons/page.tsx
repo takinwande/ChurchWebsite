@@ -6,6 +6,7 @@ import type { Sermon, SermonSeries, Speaker } from '@/lib/types'
 import { SermonCard } from '@/components/sermons/SermonCard'
 import { SermonFilters } from '@/components/sermons/SermonFilters'
 import { BookOpen } from 'lucide-react'
+import { FadeIn, StaggerContainer, StaggerItem, AnimatedCard } from '@/components/animation'
 
 export const revalidate = 300
 
@@ -43,25 +44,33 @@ export default async function SermonsPage({ searchParams }: SermonsPageProps) {
     <div className="py-12 sm:py-16">
       <div className="container mx-auto px-4">
         {/* Header */}
-        <div className="mb-10 max-w-2xl">
-          <h1 className="text-3xl font-bold text-foreground sm:text-4xl">Sermons</h1>
-          <p className="mt-2 text-muted-foreground">
-            Listen to or watch past messages and teachings.
-          </p>
-        </div>
+        <FadeIn>
+          <div className="mb-10 max-w-2xl">
+            <h1 className="text-3xl font-bold text-foreground sm:text-4xl">Sermons</h1>
+            <p className="mt-2 text-muted-foreground">
+              Listen to or watch past messages and teachings.
+            </p>
+          </div>
+        </FadeIn>
 
         {/* Filters */}
-        <Suspense>
-          <SermonFilters series={series ?? []} speakers={speakers ?? []} />
-        </Suspense>
+        <FadeIn delay={0.1}>
+          <Suspense>
+            <SermonFilters series={series ?? []} speakers={speakers ?? []} />
+          </Suspense>
+        </FadeIn>
 
         {/* Results */}
         {sermons && sermons.length > 0 ? (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <StaggerContainer className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {sermons.map((sermon) => (
-              <SermonCard key={sermon._id} sermon={sermon} />
+              <StaggerItem key={sermon._id}>
+                <AnimatedCard>
+                  <SermonCard sermon={sermon} />
+                </AnimatedCard>
+              </StaggerItem>
             ))}
-          </div>
+          </StaggerContainer>
         ) : (
           <div className="flex flex-col items-center py-20 text-center text-muted-foreground">
             <BookOpen className="mb-4 h-12 w-12 opacity-30" aria-hidden="true" />

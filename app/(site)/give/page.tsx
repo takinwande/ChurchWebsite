@@ -3,6 +3,7 @@ import type { SimpleIcon } from 'simple-icons'
 import { siZelle, siCashapp, siPaypal } from 'simple-icons'
 import { Heart } from 'lucide-react'
 import { GivingMethodCard } from '@/components/give/GivingMethodCard'
+import { SlideUp, StaggerContainer, StaggerItem, AnimatedCard } from '@/components/animation'
 
 export const metadata: Metadata = {
   title: 'Give',
@@ -45,69 +46,87 @@ export default function GivePage() {
         <div className="mx-auto max-w-5xl">
 
           {/* Header */}
-          <div className="mb-12 text-center">
-            <div className="mb-6 flex justify-center">
-              <div className="flex h-20 w-20 items-center justify-center rounded-full bg-primary/10">
-                <Heart className="h-10 w-10 text-primary" aria-hidden="true" />
+          <SlideUp>
+            <div className="mb-12 text-center">
+              <div className="mb-6 flex justify-center">
+                <div className="flex h-20 w-20 items-center justify-center rounded-full bg-primary/10">
+                  <Heart className="h-10 w-10 text-primary" aria-hidden="true" />
+                </div>
               </div>
+              <h1 className="mb-4 text-3xl font-bold text-foreground sm:text-4xl">Give</h1>
+              <p className="mb-3 text-lg text-muted-foreground leading-relaxed">
+                Your generosity fuels our mission to worship, grow, and serve our community and beyond.
+              </p>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                &ldquo;Each of you should give what you have decided in your heart to give, not reluctantly
+                or under compulsion, for God loves a cheerful giver.&rdquo; &mdash; 2 Corinthians 9:7
+              </p>
             </div>
-            <h1 className="mb-4 text-3xl font-bold text-foreground sm:text-4xl">Give</h1>
-            <p className="mb-3 text-lg text-muted-foreground leading-relaxed">
-              Your generosity fuels our mission to worship, grow, and serve our community and beyond.
-            </p>
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              &ldquo;Each of you should give what you have decided in your heart to give, not reluctantly
-              or under compulsion, for God loves a cheerful giver.&rdquo; &mdash; 2 Corinthians 9:7
-            </p>
-          </div>
+          </SlideUp>
 
           {/* Giving methods */}
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <StaggerContainer className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4" staggerDelay={0.10}>
 
-            <GivingMethodCard
-              icon={<BrandIcon icon={siZelle} label="Zelle logo" />}
-              name="Zelle"
-              description="Send a gift directly from your bank app — fast, free, and secure."
-              detail="admin@covenantassembly.org"
-              note="Open your bank app → Send Money → enter this email address"
-            />
+            <StaggerItem>
+              <AnimatedCard>
+                <GivingMethodCard
+                  icon={<BrandIcon icon={siZelle} label="Zelle logo" />}
+                  name="Zelle"
+                  description="Send a gift directly from your bank app — fast, free, and secure."
+                  detail="admin@covenantassembly.org"
+                  note="Open your bank app → Send Money → enter this email address"
+                />
+              </AnimatedCard>
+            </StaggerItem>
 
-            <GivingMethodCard
-              icon={<GivelifyIcon />}
-              name="Givelify"
-              description="Give securely online or through the Givelify app."
-              detail="RCCG Covenant Assembly, Avondale"
-              action={{
-                label: 'Give Online',
-                href: 'https://www.givelify.com/donate/NTQ3ODU',
-              }}
-              note='Or search "RCCG Covenant Assembly, Avondale" in the Givelify app'
-            />
+            <StaggerItem>
+              <AnimatedCard>
+                <GivingMethodCard
+                  icon={<GivelifyIcon />}
+                  name="Givelify"
+                  description="Give securely online or through the Givelify app."
+                  detail="RCCG Covenant Assembly, Avondale"
+                  action={{
+                    label: 'Give Online',
+                    href: 'https://www.givelify.com/donate/NTQ3ODU',
+                  }}
+                  note='Or search "RCCG Covenant Assembly, Avondale" in the Givelify app'
+                />
+              </AnimatedCard>
+            </StaggerItem>
 
-            <GivingMethodCard
-              icon={<BrandIcon icon={siCashapp} label="Cash App logo" />}
-              name="Cash App"
-              description="Send a gift instantly using our Cash App $Cashtag."
-              detail="$RCCGCAAZ"
-              action={{
-                label: 'Open Cash App',
-                href: 'https://cash.app/$RCCGCAAZ',
-              }}
-            />
+            <StaggerItem>
+              <AnimatedCard>
+                <GivingMethodCard
+                  icon={<BrandIcon icon={siCashapp} label="Cash App logo" />}
+                  name="Cash App"
+                  description="Send a gift instantly using our Cash App $Cashtag."
+                  detail="$RCCGCAAZ"
+                  action={{
+                    label: 'Open Cash App',
+                    href: 'https://cash.app/$RCCGCAAZ',
+                  }}
+                />
+              </AnimatedCard>
+            </StaggerItem>
 
-            <GivingMethodCard
-              icon={<BrandIcon icon={siPaypal} label="PayPal logo" />}
-              name="PayPal"
-              description="Send a gift securely through PayPal using our email address."
-              detail="admin@covenantassembly.org"
-              action={{
-                label: 'Donate via PayPal',
-                href: 'https://www.paypal.com/donate?business=admin%40covenantassembly.org',
-              }}
-              note="You can also log in to PayPal → Send & Request → enter this email address"
-            />
+            <StaggerItem>
+              <AnimatedCard>
+                <GivingMethodCard
+                  icon={<BrandIcon icon={siPaypal} label="PayPal logo" />}
+                  name="PayPal"
+                  description="Send a gift securely through PayPal using our email address."
+                  detail="admin@covenantassembly.org"
+                  action={{
+                    label: 'Donate via PayPal',
+                    href: 'https://www.paypal.com/donate?business=admin%40covenantassembly.org',
+                  }}
+                  note="You can also log in to PayPal → Send & Request → enter this email address"
+                />
+              </AnimatedCard>
+            </StaggerItem>
 
-          </div>
+          </StaggerContainer>
         </div>
       </div>
     </div>

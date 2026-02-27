@@ -2,7 +2,9 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
+import { useState } from 'react'
 import { usePathname } from 'next/navigation'
+import { useScroll, useMotionValueEvent } from 'framer-motion'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { MobileMenu } from './MobileMenu'
@@ -21,9 +23,20 @@ const navLinks = [
 
 export function Navbar() {
   const pathname = usePathname()
+  const { scrollY } = useScroll()
+  const [isScrolled, setIsScrolled] = useState(false)
+
+  useMotionValueEvent(scrollY, 'change', (latest) => {
+    setIsScrolled(latest > 10)
+  })
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-border/60 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
+    <header
+      className={cn(
+        'sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 transition-shadow duration-200',
+        isScrolled ? 'border-border/80 shadow-md' : 'border-border/60 shadow-none'
+      )}
+    >
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         {/* Logo / Name */}
         <Link href="/" className="flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md">

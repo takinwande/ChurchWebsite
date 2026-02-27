@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { PrayerRequestForm } from '@/components/prayer/PrayerRequestForm'
 import { Separator } from '@/components/ui/separator'
 import { Heart } from 'lucide-react'
+import { FadeIn } from '@/components/animation'
 
 export const metadata: Metadata = {
   title: 'Prayer Requests',
@@ -13,14 +14,17 @@ export default function PrayerPage() {
     <div className="py-12 sm:py-16">
       <div className="container mx-auto px-4">
         <div className="mx-auto max-w-5xl">
-          <div className="mb-10">
-            <h1 className="text-3xl font-bold text-foreground sm:text-4xl">Prayer Requests</h1>
-            <p className="mt-2 text-muted-foreground">
-              We believe in the power of prayer. Share your request and our pastoral team will pray with you.
-            </p>
-          </div>
+          <FadeIn>
+            <div className="mb-10">
+              <h1 className="text-3xl font-bold text-foreground sm:text-4xl">Prayer Requests</h1>
+              <p className="mt-2 text-muted-foreground">
+                We believe in the power of prayer. Share your request and our pastoral team will pray with you.
+              </p>
+            </div>
+          </FadeIn>
 
-          <div className="grid gap-12 lg:grid-cols-[1fr_360px]">
+          <FadeIn delay={0.1}>
+            <div className="grid gap-12 lg:grid-cols-[1fr_360px]">
             {/* Form */}
             <section aria-label="Prayer request form">
               <PrayerRequestForm />
@@ -63,7 +67,8 @@ export default function PrayerPage() {
                 </div>
               </div>
             </aside>
-          </div>
+            </div>
+          </FadeIn>
         </div>
       </div>
     </div>
