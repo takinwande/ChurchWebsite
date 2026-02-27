@@ -1,6 +1,6 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
 import { useReducedMotionContext } from './ReducedMotionProvider'
 
 interface SlideUpProps {
@@ -25,7 +25,7 @@ export function SlideUp({
   }
 
   return (
-    <motion.div
+    <m.div
       className={className}
       initial={{ opacity: 0, y: distance }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -33,6 +33,6 @@ export function SlideUp({
       transition={{ duration, delay, ease: [0.25, 0.1, 0.25, 1] }}
     >
       {children}
-    </motion.div>
+    </m.div>
   )
 }

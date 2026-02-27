@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
 import { Lightbox } from './Lightbox'
 import type { GalleryPhoto } from '@/lib/types'
 
@@ -33,7 +33,7 @@ export function PhotoGrid({ photos }: PhotoGridProps) {
 
   return (
     <>
-      <motion.div
+      <m.div
         className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4"
         variants={gridVariants}
         initial="hidden"
@@ -42,7 +42,7 @@ export function PhotoGrid({ photos }: PhotoGridProps) {
         {photos.map((photo, i) => {
           const src = photo.url ?? ''
           return (
-            <motion.button
+            <m.button
               key={photo._key ?? i}
               variants={photoVariants}
               onClick={() => setLightboxIndex(i)}
@@ -58,10 +58,10 @@ export function PhotoGrid({ photos }: PhotoGridProps) {
                   sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                 />
               )}
-            </motion.button>
+            </m.button>
           )
         })}
-      </motion.div>
+      </m.div>
 
       {lightboxIndex !== null && (
         <Lightbox
