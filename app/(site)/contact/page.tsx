@@ -6,6 +6,7 @@ import { ContactForm } from '@/components/contact/ContactForm'
 import { Separator } from '@/components/ui/separator'
 import { MapPin, Phone, Mail, Clock } from 'lucide-react'
 import { formatPhoneNumber } from '@/lib/utils'
+import { FadeIn } from '@/components/animation'
 
 export const revalidate = 300
 
@@ -31,12 +32,15 @@ export default async function ContactPageRoute() {
     <div className="py-12 sm:py-16">
       <div className="container mx-auto px-4">
         <div className="mx-auto max-w-5xl">
-          <div className="mb-10">
-            <h1 className="text-3xl font-bold text-foreground sm:text-4xl">Contact Us</h1>
-            <p className="mt-2 text-muted-foreground">We&apos;d love to hear from you. Send us a message below.</p>
-          </div>
+          <FadeIn>
+            <div className="mb-10">
+              <h1 className="text-3xl font-bold text-foreground sm:text-4xl">Contact Us</h1>
+              <p className="mt-2 text-muted-foreground">We&apos;d love to hear from you. Send us a message below.</p>
+            </div>
+          </FadeIn>
 
-          <div className="grid gap-12 lg:grid-cols-[1fr_380px]">
+          <FadeIn delay={0.1}>
+            <div className="grid gap-12 lg:grid-cols-[1fr_380px]">
             {/* Form */}
             <section aria-label="Contact form">
               <ContactForm />
@@ -93,7 +97,8 @@ export default async function ContactPageRoute() {
                 )}
               </div>
             </aside>
-          </div>
+            </div>
+          </FadeIn>
         </div>
       </div>
     </div>

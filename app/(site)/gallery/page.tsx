@@ -4,6 +4,7 @@ import { client } from '@/lib/sanity/client'
 import { GALLERY_ALBUMS_QUERY } from '@/lib/sanity/queries'
 import type { GalleryAlbum } from '@/lib/types'
 import { AlbumCard } from '@/components/gallery/AlbumCard'
+import { SlideUp, StaggerContainer, StaggerItem } from '@/components/animation'
 
 export const revalidate = 300
 
@@ -19,24 +20,28 @@ export default async function GalleryPage() {
     <div className="py-16 sm:py-24">
       <div className="container mx-auto px-4">
         {/* Header */}
-        <div className="mb-12 text-center">
-          <div className="mb-6 flex justify-center">
-            <div className="flex h-20 w-20 items-center justify-center rounded-full bg-primary/10">
-              <Images className="h-10 w-10 text-primary" aria-hidden="true" />
+        <SlideUp>
+          <div className="mb-12 text-center">
+            <div className="mb-6 flex justify-center">
+              <div className="flex h-20 w-20 items-center justify-center rounded-full bg-primary/10">
+                <Images className="h-10 w-10 text-primary" aria-hidden="true" />
+              </div>
             </div>
+            <h1 className="mb-4 text-3xl font-bold text-foreground sm:text-4xl">Gallery</h1>
+            <p className="text-lg text-muted-foreground">
+              Moments from our services, events, and community life.
+            </p>
           </div>
-          <h1 className="mb-4 text-3xl font-bold text-foreground sm:text-4xl">Gallery</h1>
-          <p className="text-lg text-muted-foreground">
-            Moments from our services, events, and community life.
-          </p>
-        </div>
+        </SlideUp>
 
         {albums && albums.length > 0 ? (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <StaggerContainer className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3" staggerDelay={0.06}>
             {albums.map((album) => (
-              <AlbumCard key={album._id} album={album} />
+              <StaggerItem key={album._id}>
+                <AlbumCard album={album} />
+              </StaggerItem>
             ))}
-          </div>
+          </StaggerContainer>
         ) : (
           <div className="py-20 text-center">
             <Images className="mx-auto mb-4 h-12 w-12 text-muted-foreground/40" aria-hidden="true" />

@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { formatDate, getYouTubeEmbedUrl } from '@/lib/utils'
 import { ChevronLeft, BookOpen, Download, ExternalLink } from 'lucide-react'
+import { SlideUp, FadeIn, StaggerContainer, StaggerItem, AnimatedCard } from '@/components/animation'
 
 export const revalidate = 300
 
@@ -53,21 +54,23 @@ export default async function SermonDetailPage({ params }: SermonPageProps) {
           </Button>
 
           {/* Header */}
-          <div className="mb-6">
-            {sermon.series && (
-              <Badge variant="secondary" className="mb-3">
-                {sermon.series.title}
-              </Badge>
-            )}
-            <h1 className="text-2xl font-bold text-foreground sm:text-3xl lg:text-4xl leading-tight">
-              {sermon.title}
-            </h1>
-            <p className="mt-2 text-sm text-muted-foreground">
-              {sermon.speaker?.name && <span>{sermon.speaker.name}</span>}
-              {sermon.speaker?.name && sermon.date && <span className="mx-1.5">·</span>}
-              {sermon.date && <span>{formatDate(sermon.date)}</span>}
-            </p>
-          </div>
+          <SlideUp>
+            <div className="mb-6">
+              {sermon.series && (
+                <Badge variant="secondary" className="mb-3">
+                  {sermon.series.title}
+                </Badge>
+              )}
+              <h1 className="text-2xl font-bold text-foreground sm:text-3xl lg:text-4xl leading-tight">
+                {sermon.title}
+              </h1>
+              <p className="mt-2 text-sm text-muted-foreground">
+                {sermon.speaker?.name && <span>{sermon.speaker.name}</span>}
+                {sermon.speaker?.name && sermon.date && <span className="mx-1.5">·</span>}
+                {sermon.date && <span>{formatDate(sermon.date)}</span>}
+              </p>
+            </div>
+          </SlideUp>
 
           {/* Scripture refs */}
           {sermon.scriptureRefs && sermon.scriptureRefs.length > 0 && (
@@ -146,17 +149,20 @@ export default async function SermonDetailPage({ params }: SermonPageProps) {
           {/* More from this series */}
           {relatedSermons.length > 0 && (
             <section className="mt-12" aria-label="More from this series">
-              <h2 className="mb-6 text-xl font-semibold text-foreground">
-                More from &ldquo;{sermon.series?.title}&rdquo;
-              </h2>
-              <div className="grid gap-4 sm:grid-cols-2">
+              <FadeIn>
+                <h2 className="mb-6 text-xl font-semibold text-foreground">
+                  More from &ldquo;{sermon.series?.title}&rdquo;
+                </h2>
+              </FadeIn>
+              <StaggerContainer className="grid gap-4 sm:grid-cols-2">
                 {relatedSermons.slice(0, 4).map((s) => (
-                  <SermonCard
-                    key={s.slug.current}
-                    sermon={s as Sermon}
-                  />
+                  <StaggerItem key={s.slug.current}>
+                    <AnimatedCard>
+                      <SermonCard sermon={s as Sermon} />
+                    </AnimatedCard>
+                  </StaggerItem>
                 ))}
-              </div>
+              </StaggerContainer>
             </section>
           )}
         </div>

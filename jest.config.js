@@ -11,10 +11,11 @@ const customConfig = {
     '^next/image$': '<rootDir>/__mocks__/next/image.tsx',
     '^next/link$': '<rootDir>/__mocks__/next/link.tsx',
     '^next/navigation$': '<rootDir>/__mocks__/next/navigation.ts',
+    '^framer-motion$': '<rootDir>/__mocks__/framer-motion.tsx',
     '\\.css$': '<rootDir>/__mocks__/styleMock.js',
   },
   transformIgnorePatterns: [
-    '/node_modules/(?!(lucide-react|@radix-ui|@portabletext\\/react)/)',
+    '/node_modules/(?!(lucide-react|@radix-ui|@portabletext\\/react|framer-motion)/)',
   ],
   testMatch: [
     '**/__tests__/**/*.test.ts',

@@ -4,6 +4,7 @@ import { EVENTS_QUERY } from '@/lib/sanity/queries'
 import type { Event } from '@/lib/types'
 import { EventCard } from '@/components/events/EventCard'
 import { CalendarDays } from 'lucide-react'
+import { FadeIn, StaggerContainer, StaggerItem, AnimatedCard } from '@/components/animation'
 
 export const revalidate = 300
 
@@ -21,19 +22,27 @@ export default async function EventsPage() {
   return (
     <div className="py-12 sm:py-16">
       <div className="container mx-auto px-4">
-        <div className="mb-10 max-w-2xl">
-          <h1 className="text-3xl font-bold text-foreground sm:text-4xl">Events</h1>
-          <p className="mt-2 text-muted-foreground">Stay connected with what&apos;s happening in our community.</p>
-        </div>
+        <FadeIn>
+          <div className="mb-10 max-w-2xl">
+            <h1 className="text-3xl font-bold text-foreground sm:text-4xl">Events</h1>
+            <p className="mt-2 text-muted-foreground">Stay connected with what&apos;s happening in our community.</p>
+          </div>
+        </FadeIn>
 
         {upcoming.length > 0 ? (
           <section aria-label="Upcoming events">
-            <h2 className="mb-6 text-xl font-semibold text-foreground">Upcoming</h2>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <FadeIn delay={0.05}>
+              <h2 className="mb-6 text-xl font-semibold text-foreground">Upcoming</h2>
+            </FadeIn>
+            <StaggerContainer className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {upcoming.map((event) => (
-                <EventCard key={event._id} event={event} />
+                <StaggerItem key={event._id}>
+                  <AnimatedCard>
+                    <EventCard event={event} />
+                  </AnimatedCard>
+                </StaggerItem>
               ))}
-            </div>
+            </StaggerContainer>
           </section>
         ) : (
           <div className="flex flex-col items-center py-20 text-center text-muted-foreground">
@@ -45,12 +54,18 @@ export default async function EventsPage() {
 
         {past.length > 0 && (
           <section className="mt-14" aria-label="Past events">
-            <h2 className="mb-6 text-xl font-semibold text-muted-foreground">Past Events</h2>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <FadeIn>
+              <h2 className="mb-6 text-xl font-semibold text-muted-foreground">Past Events</h2>
+            </FadeIn>
+            <StaggerContainer className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {past.map((event) => (
-                <EventCard key={event._id} event={event} />
+                <StaggerItem key={event._id}>
+                  <AnimatedCard>
+                    <EventCard event={event} />
+                  </AnimatedCard>
+                </StaggerItem>
               ))}
-            </div>
+            </StaggerContainer>
           </section>
         )}
       </div>

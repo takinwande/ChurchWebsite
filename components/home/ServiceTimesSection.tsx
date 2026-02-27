@@ -1,5 +1,6 @@
 import { Clock } from 'lucide-react'
 import type { ServiceTime } from '@/lib/types'
+import { FadeIn } from '@/components/animation/FadeIn'
 
 interface ServiceTimesSectionProps {
   serviceTimes: ServiceTime[]
@@ -11,6 +12,7 @@ export function ServiceTimesSection({ serviceTimes }: ServiceTimesSectionProps) 
     : [{ name: 'Sunday Worship Service', day: 'Sunday', time: '10:00 AM' }]
 
   return (
+    <FadeIn>
     <section className="bg-primary py-12 text-white" aria-label="Service times">
       <div className="container mx-auto px-4">
         <div className="flex flex-col items-center gap-6 sm:flex-row sm:flex-wrap sm:justify-center sm:gap-x-10 sm:gap-y-6 lg:gap-x-16">
@@ -29,5 +31,6 @@ export function ServiceTimesSection({ serviceTimes }: ServiceTimesSectionProps) 
         </div>
       </div>
     </section>
+    </FadeIn>
   )
 }

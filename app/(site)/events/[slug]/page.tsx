@@ -10,6 +10,7 @@ import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { formatDateTime, formatShortDate } from '@/lib/utils'
 import { ChevronLeft, CalendarDays, MapPin, ExternalLink, Clock } from 'lucide-react'
+import { SlideUp, FadeIn } from '@/components/animation'
 
 export const revalidate = 300
 
@@ -48,34 +49,38 @@ export default async function EventDetailPage({ params }: EventPageProps) {
             </Link>
           </Button>
 
-          <div className="mb-8">
-            <div className="flex flex-wrap gap-2 mb-3">
-              {event.featured && <Badge>Featured</Badge>}
-              {isPast && <Badge variant="secondary">Past Event</Badge>}
+          <SlideUp>
+            <div className="mb-8">
+              <div className="flex flex-wrap gap-2 mb-3">
+                {event.featured && <Badge>Featured</Badge>}
+                {isPast && <Badge variant="secondary">Past Event</Badge>}
+              </div>
+              <h1 className="text-2xl font-bold text-foreground sm:text-3xl lg:text-4xl">{event.title}</h1>
             </div>
-            <h1 className="text-2xl font-bold text-foreground sm:text-3xl lg:text-4xl">{event.title}</h1>
-          </div>
+          </SlideUp>
 
           {/* Event meta */}
-          <div className="mb-8 rounded-xl border border-border bg-slate-50 p-5 space-y-3">
-            <div className="flex items-start gap-3">
-              <CalendarDays className="mt-0.5 h-5 w-5 shrink-0 text-primary" aria-hidden="true" />
-              <div>
-                <p className="text-sm font-medium text-foreground">{formatDateTime(event.startDateTime)}</p>
-                {event.endDateTime && (
-                  <p className="text-xs text-muted-foreground mt-0.5">
-                    Until {formatDateTime(event.endDateTime)}
-                  </p>
-                )}
+          <FadeIn delay={0.1}>
+            <div className="mb-8 rounded-xl border border-border bg-slate-50 p-5 space-y-3">
+              <div className="flex items-start gap-3">
+                <CalendarDays className="mt-0.5 h-5 w-5 shrink-0 text-primary" aria-hidden="true" />
+                <div>
+                  <p className="text-sm font-medium text-foreground">{formatDateTime(event.startDateTime)}</p>
+                  {event.endDateTime && (
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      Until {formatDateTime(event.endDateTime)}
+                    </p>
+                  )}
+                </div>
               </div>
+              {event.location && (
+                <div className="flex items-center gap-3">
+                  <MapPin className="h-5 w-5 shrink-0 text-primary" aria-hidden="true" />
+                  <p className="text-sm text-foreground">{event.location}</p>
+                </div>
+              )}
             </div>
-            {event.location && (
-              <div className="flex items-center gap-3">
-                <MapPin className="h-5 w-5 shrink-0 text-primary" aria-hidden="true" />
-                <p className="text-sm text-foreground">{event.location}</p>
-              </div>
-            )}
-          </div>
+          </FadeIn>
 
           {/* Description */}
           {event.description && event.description.length > 0 && (

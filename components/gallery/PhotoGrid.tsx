@@ -2,8 +2,19 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
+import { motion } from 'framer-motion'
 import { Lightbox } from './Lightbox'
 import type { GalleryPhoto } from '@/lib/types'
+
+const gridVariants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.04 } },
+}
+
+const photoVariants = {
+  hidden: { opacity: 0, scale: 0.96 },
+  visible: { opacity: 1, scale: 1, transition: { duration: 0.3 } },
+}
 
 interface PhotoGridProps {
   photos: GalleryPhoto[]
@@ -22,12 +33,18 @@ export function PhotoGrid({ photos }: PhotoGridProps) {
 
   return (
     <>
-      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
+      <motion.div
+        className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4"
+        variants={gridVariants}
+        initial="hidden"
+        animate="visible"
+      >
         {photos.map((photo, i) => {
           const src = photo.url ?? ''
           return (
-            <button
+            <motion.button
               key={photo._key ?? i}
+              variants={photoVariants}
               onClick={() => setLightboxIndex(i)}
               className="group relative aspect-square w-full overflow-hidden rounded-lg bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               aria-label={photo.alt ?? `View photo ${i + 1}`}
@@ -41,10 +58,10 @@ export function PhotoGrid({ photos }: PhotoGridProps) {
                   sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                 />
               )}
-            </button>
+            </motion.button>
           )
         })}
-      </div>
+      </motion.div>
 
       {lightboxIndex !== null && (
         <Lightbox
