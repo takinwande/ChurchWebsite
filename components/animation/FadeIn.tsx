@@ -1,6 +1,6 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
 import { useReducedMotionContext } from './ReducedMotionProvider'
 
 interface FadeInProps {
@@ -18,7 +18,7 @@ export function FadeIn({ children, className, delay = 0, duration = 0.5 }: FadeI
   }
 
   return (
-    <motion.div
+    <m.div
       className={className}
       initial={{ opacity: 0, y: 12 }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -26,6 +26,6 @@ export function FadeIn({ children, className, delay = 0, duration = 0.5 }: FadeI
       transition={{ duration, delay, ease: [0.25, 0.1, 0.25, 1] }}
     >
       {children}
-    </motion.div>
+    </m.div>
   )
 }
