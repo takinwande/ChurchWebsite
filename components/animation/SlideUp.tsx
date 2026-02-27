@@ -15,8 +15,8 @@ export function SlideUp({
   children,
   className,
   delay = 0,
-  duration = 0.45,
-  distance = 18,
+  duration = 0.55,
+  distance = 36,
 }: SlideUpProps) {
   const reduced = useReducedMotionContext()
 
@@ -29,7 +29,7 @@ export function SlideUp({
       className={className}
       initial={{ opacity: 0, y: distance }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-80px' }}
+      viewport={{ once: true, margin: '-40px' }}
       transition={{ duration, delay, ease: [0.25, 0.1, 0.25, 1] }}
     >
       {children}

@@ -13,7 +13,7 @@ interface StaggerContainerProps {
 export function StaggerContainer({
   children,
   className,
-  staggerDelay = 0.08,
+  staggerDelay = 0.14,
   delayStart = 0,
 }: StaggerContainerProps) {
   const reduced = useReducedMotionContext()
@@ -27,7 +27,7 @@ export function StaggerContainer({
       className={className}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, margin: '-80px' }}
+      viewport={{ once: true, margin: '-40px' }}
       variants={{
         hidden: {},
         visible: {

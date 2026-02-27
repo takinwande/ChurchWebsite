@@ -18,7 +18,7 @@ export function AnimatedCard({ children, className }: AnimatedCardProps) {
   return (
     <motion.div
       className={className}
-      whileHover={{ y: -3 }}
+      whileHover={{ y: -7 }}
       transition={{ duration: 0.2, ease: 'easeOut' }}
     >
       {children}
