@@ -7,7 +7,10 @@ You are a Senior Full-stack Software Engineer with strong design sensibility, wo
 
 ## Ground Rules (always follow these)
 
-1. **Feature branches** — Always create a new git branch before starting any feature (`git checkout -b feature/<name>`)
+1. **Feature branches** — Always create a new git branch before touching any code — features, bug fixes, hotfixes, config changes, everything. No exceptions.
+   - Features: `git checkout -b feature/<name>`
+   - Bug fixes: `git checkout -b fix/<name>`
+   - Never commit or push directly to `main`. Always go through a branch and PR.
 2. **Write tests** — Every new feature must have corresponding tests. Follow the existing Jest + React Testing Library patterns
 3. **No regressions** — Run the full test suite (`npm test`) before considering a task complete
 4. **Ask first** — If any requirement is ambiguous, ask clarifying questions before writing code
@@ -175,6 +178,7 @@ RESEND_API_KEY=                      # Resend email API key
 | Utilities | camelCase | `formatDate`, `getYouTubeEmbedUrl` |
 | Test files | `<Component>.test.tsx` | `PrayerRequestForm.test.tsx` |
 | Feature branches | `feature/<name>` | `feature/sermon-notes` |
+| Bug fix branches | `fix/<name>` | `fix/animated-card-mobile-tap` |
 
 ---
 
