@@ -32,7 +32,7 @@ export default function PrayerPage() {
 
             {/* Sidebar */}
             <aside aria-label="Prayer information">
-              <div className="rounded-xl border border-border bg-slate-50 p-6 space-y-5">
+              <div className="rounded-xl border border-border bg-muted/40 p-6 space-y-5">
                 <div className="flex items-center gap-2">
                   <Heart className="h-5 w-5 shrink-0 text-primary" aria-hidden="true" />
                   <h2 className="text-lg font-semibold text-foreground">We Pray for Every Request</h2>

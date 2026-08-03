@@ -54,7 +54,7 @@ export function AudioPlayer({ src, title }: AudioPlayerProps) {
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0
 
   return (
-    <div className="rounded-xl border border-border bg-slate-50 p-4">
+    <div className="rounded-xl border border-border bg-muted/40 p-4">
       <audio
         ref={audioRef}
         src={src}

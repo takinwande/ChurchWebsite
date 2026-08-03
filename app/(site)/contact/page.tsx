@@ -48,7 +48,7 @@ export default async function ContactPageRoute() {
 
             {/* Contact info sidebar */}
             <aside aria-label="Contact information">
-              <div className="rounded-xl border border-border bg-slate-50 p-6 space-y-5">
+              <div className="rounded-xl border border-border bg-muted/40 p-6 space-y-5">
                 <h2 className="text-lg font-semibold text-foreground">Church Info</h2>
 
                 <div className="flex items-start gap-3">

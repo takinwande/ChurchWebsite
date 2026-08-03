@@ -199,6 +199,13 @@ npm run test:coverage # Jest coverage
 
 - Tailwind utility-first; use semantic tokens (`bg-background`, `text-foreground`, `border-border`) for theme-aware colors
 - Primary color palette: `primary-50` through `primary-900` (blue scale, defined in `tailwind.config.ts`)
-- Dark mode supported via `dark:` prefix (class-based)
+
+### Dark Mode
+Class-based (`.dark` on `<html>`), with both palettes defined as CSS variables in `app/globals.css`.
+
+- **Never hardcode `bg-slate-*`, `bg-white`, or `text-black`** on page surfaces — use `bg-background`, `bg-card`, or `bg-muted/40`. Only reach for a literal colour when the element sits on a backdrop that is dark in *both* themes (Hero photo overlay, Lightbox, carousel arrows).
+- **`--primary` inverts between themes** — deep navy on light, light blue on dark. So anything painted `bg-primary` must use `text-primary-foreground`, never `text-white`, or it becomes unreadable in dark mode. The same applies to `via-primary` in gradients: use a fixed scale step (`via-primary-600`) when the gradient must stay dark in both themes.
+- `ThemeScript` (`components/theme/`) runs inline in `<head>` before first paint to apply the stored or system theme; `<html>` carries `suppressHydrationWarning` because of it.
+- `ThemeToggle` reads and writes the class directly on `document.documentElement` and renders **both** icons, letting CSS pick via `dark:hidden` / `dark:block`. Do not convert it to React state — the theme is unknowable server-side, so state would either mismatch on hydration or flicker after mount.
 - Use `cn()` from `lib/utils.ts` (clsx + tailwind-merge) for conditional classes
 - Prefer Tailwind classes over inline styles; no new CSS files unless truly necessary

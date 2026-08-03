@@ -33,6 +33,44 @@
     --ring: 218 60% 26%;
 
     --radius: 0.5rem;
+
+    color-scheme: light;
+  }
+
+  .dark {
+    --background: 222 47% 8%;
+    --foreground: 210 40% 96%;
+
+    --card: 222 45% 11%;
+    --card-foreground: 210 40% 96%;
+
+    --popover: 222 45% 11%;
+    --popover-foreground: 210 40% 96%;
+
+    /* Inverted against light mode: the brand navy is unreadable as text on a
+       dark background, so primary lightens and its foreground darkens. Anything
+       painted with bg-primary must therefore use text-primary-foreground, never
+       a literal text-white. */
+    --primary: 214 85% 68%;
+    --primary-foreground: 222 47% 11%;
+
+    --secondary: 217 33% 18%;
+    --secondary-foreground: 210 40% 96%;
+
+    --muted: 217 33% 16%;
+    --muted-foreground: 215 20% 68%;
+
+    --accent: 217 33% 20%;
+    --accent-foreground: 210 40% 96%;
+
+    --destructive: 0 63% 58%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217 33% 22%;
+    --input: 217 33% 22%;
+    --ring: 214 85% 68%;
+
+    color-scheme: dark;
   }
 }
 

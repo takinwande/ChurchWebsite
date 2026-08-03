@@ -61,7 +61,7 @@ export default async function EventDetailPage({ params }: EventPageProps) {
 
           {/* Event meta */}
           <FadeIn delay={0.1}>
-            <div className="mb-8 rounded-xl border border-border bg-slate-50 p-5 space-y-3">
+            <div className="mb-8 rounded-xl border border-border bg-muted/40 p-5 space-y-3">
               <div className="flex items-start gap-3">
                 <CalendarDays className="mt-0.5 h-5 w-5 shrink-0 text-primary" aria-hidden="true" />
                 <div>

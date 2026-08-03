@@ -34,7 +34,7 @@ export function FliersCarousel({ fliers, intervalMs = 5000 }: FliersCarouselProp
 
   return (
     <div
-      className="relative overflow-hidden rounded-2xl aspect-[3/4] sm:aspect-[4/3] bg-slate-100"
+      className="relative overflow-hidden rounded-2xl aspect-[3/4] sm:aspect-[4/3] bg-muted"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >

@@ -66,7 +66,9 @@ export function Hero({ name, tagline, livestreamUrl, heroImages }: HeroProps) {
       ) : (
         <>
           {/* Fallback gradient (original design) */}
-          <div className="absolute inset-0 bg-gradient-to-br from-primary-700 via-primary to-primary-800" aria-hidden="true" />
+          {/* Fixed scale steps, not the themeable --primary: this gradient always
+              carries white text, so it must stay dark in both themes. */}
+          <div className="absolute inset-0 bg-gradient-to-br from-primary-700 via-primary-600 to-primary-800" aria-hidden="true" />
           <div
             className="absolute inset-0 opacity-5"
             style={{

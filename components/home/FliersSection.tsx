@@ -9,7 +9,7 @@ export function FliersSection({ fliers }: FliersSectionProps) {
   if (!fliers || fliers.length === 0) return null
 
   return (
-    <section className="py-20 bg-white" aria-label="Program fliers">
+    <section className="py-20 bg-background" aria-label="Program fliers">
       <div className="container mx-auto px-4">
         <div className="mx-auto max-w-2xl">
           <div className="mb-8 text-center">
