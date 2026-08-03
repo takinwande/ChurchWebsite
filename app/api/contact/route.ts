@@ -1,38 +1,33 @@
 import { NextResponse } from 'next/server'
-import { createClient } from '@sanity/client'
-import { Resend } from 'resend'
+import { getWriteClient, getNotificationEmail, sendNotificationEmail } from '@/lib/notifications'
+import { rateLimit, getClientIp } from '@/lib/rate-limit'
 
 interface ContactBody {
   name: string
   email: string
   subject: string
   message: string
-}
-
-const FALLBACK_EMAIL = 'admin@covenantassembly.org'
-
-async function getNotificationEmail(): Promise<string> {
-  try {
-    const client = createClient({
-      projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
-      dataset: process.env.NEXT_PUBLIC_SANITY_DATASET!,
-      apiVersion: '2024-01-01',
-      useCdn: false,
-    })
-    const settings = await client.fetch<{ notificationEmail?: string }>(
-      `*[_type == "siteSettings"][0]{ notificationEmail }`
-    )
-    return settings?.notificationEmail?.trim() || FALLBACK_EMAIL
-  } catch {
-    return FALLBACK_EMAIL
-  }
+  /** Honeypot — must stay empty; only bots fill it. */
+  website?: string
 }
 
 export async function POST(req: Request) {
   try {
     const body: ContactBody = await req.json()
+    const { name, email, subject, message, website } = body
 
-    const { name, email, subject, message } = body
+    // Honeypot: report success so the bot has nothing to tune against.
+    if (website?.trim()) {
+      return NextResponse.json({ success: true })
+    }
+
+    const { allowed, retryAfterSeconds } = rateLimit(`contact:${getClientIp(req)}`)
+    if (!allowed) {
+      return NextResponse.json(
+        { error: 'Too many submissions. Please wait a moment and try again.' },
+        { status: 429, headers: { 'Retry-After': String(retryAfterSeconds) } }
+      )
+    }
 
     // Basic server-side validation
     if (!name?.trim() || !email?.trim() || !subject?.trim() || !message?.trim()) {
@@ -43,18 +38,42 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Invalid email address.' }, { status: 400 })
     }
 
-    const [notificationEmail, resend] = await Promise.all([
-      getNotificationEmail(),
-      Promise.resolve(new Resend(process.env.RESEND_API_KEY)),
-    ])
-
-    await resend.emails.send({
-      from: 'onboarding@resend.dev',
-      to: notificationEmail,
-      replyTo: email,
-      subject: `[Contact] ${subject}`,
-      text: `New contact form submission from ${name}\n\nFrom: ${name}\nEmail: ${email}\nSubject: ${subject}\n\nMessage:\n${message}`,
+    // Persist first: once the submission is stored it cannot be lost to a
+    // failed email, and staff can always recover it from the Studio.
+    await getWriteClient().create({
+      _type: 'contactSubmission',
+      name: name.trim(),
+      email: email.trim(),
+      subject: subject.trim(),
+      message: message.trim(),
+      submittedAt: new Date().toISOString(),
+      status: 'new',
     })
+
+    const notificationEmail = await getNotificationEmail()
+    const { sent, error } = await sendNotificationEmail({
+      to: notificationEmail,
+      replyTo: email.trim(),
+      subject: `[Contact] ${subject.trim()}`,
+      text: [
+        `New contact form submission from ${name.trim()}`,
+        ``,
+        `From: ${name.trim()}`,
+        `Email: ${email.trim()}`,
+        `Subject: ${subject.trim()}`,
+        ``,
+        `Message:`,
+        message.trim(),
+      ].join('\n'),
+    })
+
+    if (!sent) {
+      // The submission is safely stored, so this is not fatal for the sender —
+      // but the notification pipeline is broken and needs attention.
+      console.error(
+        `[Contact form] Submission saved but email notification FAILED to ${notificationEmail}: ${error}`
+      )
+    }
 
     return NextResponse.json({ success: true })
   } catch (err) {

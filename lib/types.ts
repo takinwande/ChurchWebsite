@@ -170,6 +170,16 @@ export interface GalleryAlbum {
   photoCount?: number
 }
 
+export interface ContactSubmission {
+  _id: string
+  name: string
+  email: string
+  subject: string
+  message: string
+  submittedAt: string
+  status?: 'new' | 'replied' | 'closed'
+}
+
 export interface ProgramFlier {
   _id: string
   title: string

@@ -6,12 +6,14 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { CheckCircle, AlertCircle, Loader2 } from 'lucide-react'
+import { HoneypotField } from '@/components/forms/HoneypotField'
 
 interface FormFields {
   name: string
   email: string
   request: string
   isAnonymous: boolean
+  website: string
 }
 
 interface FormErrors {
@@ -30,6 +32,7 @@ export function PrayerRequestForm() {
     email: '',
     request: '',
     isAnonymous: false,
+    website: '',
   })
   const [errors, setErrors] = useState<FormErrors>({})
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
@@ -70,7 +73,7 @@ export function PrayerRequestForm() {
       })
       if (!res.ok) throw new Error('Request failed')
       setStatus('success')
-      setFields({ name: '', email: '', request: '', isAnonymous: false })
+      setFields({ name: '', email: '', request: '', isAnonymous: false, website: '' })
     } catch {
       setStatus('error')
     }
@@ -95,7 +98,9 @@ export function PrayerRequestForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} noValidate className="space-y-4" aria-label="Prayer request form">
+    <form onSubmit={handleSubmit} noValidate className="relative space-y-4" aria-label="Prayer request form">
+      <HoneypotField value={fields.website} onChange={handleChange} />
+
       {status === 'error' && (
         <div
           className="flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700"

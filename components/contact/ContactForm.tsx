@@ -6,12 +6,14 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { CheckCircle, AlertCircle, Loader2 } from 'lucide-react'
+import { HoneypotField } from '@/components/forms/HoneypotField'
 
 interface FormFields {
   name: string
   email: string
   subject: string
   message: string
+  website: string
 }
 
 interface FormErrors {
@@ -26,7 +28,7 @@ function validateEmail(email: string) {
 }
 
 export function ContactForm() {
-  const [fields, setFields] = useState<FormFields>({ name: '', email: '', subject: '', message: '' })
+  const [fields, setFields] = useState<FormFields>({ name: '', email: '', subject: '', message: '', website: '' })
   const [errors, setErrors] = useState<FormErrors>({})
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
 
@@ -65,7 +67,7 @@ export function ContactForm() {
       })
       if (!res.ok) throw new Error('Request failed')
       setStatus('success')
-      setFields({ name: '', email: '', subject: '', message: '' })
+      setFields({ name: '', email: '', subject: '', message: '', website: '' })
     } catch {
       setStatus('error')
     }
@@ -85,7 +87,9 @@ export function ContactForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} noValidate className="space-y-4" aria-label="Contact form">
+    <form onSubmit={handleSubmit} noValidate className="relative space-y-4" aria-label="Contact form">
+      <HoneypotField value={fields.website} onChange={handleChange} />
+
       {status === 'error' && (
         <div className="flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700" role="alert">
           <AlertCircle className="h-4 w-4 shrink-0" aria-hidden="true" />

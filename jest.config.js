@@ -23,7 +23,9 @@ const customConfig = {
   ],
   collectCoverageFrom: [
     'lib/utils.ts',
-    'app/api/contact/route.ts',
+    'lib/rate-limit.ts',
+    'lib/notifications.ts',
+    'app/api/**/route.ts',
     'components/**/*.tsx',
     '!components/ui/**',
     '!**/*.d.ts',
