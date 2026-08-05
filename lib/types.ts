@@ -42,6 +42,8 @@ export interface SiteSettings {
   givingUrl?: string
   livestreamUrl?: string
   notificationEmail?: string
+  /** Days a finished event stays under "Recently Past". Blank falls back to the default. */
+  pastEventsWindowDays?: number
 }
 
 export interface Announcement {
@@ -108,6 +110,12 @@ export interface Event {
   featured?: boolean
   image?: SanityImage
   imageUrl?: string
+}
+
+/** Events split into the two groups the events page renders. */
+export interface GroupedEvents {
+  upcoming: Event[]
+  past: Event[]
 }
 
 export interface FaqItem {

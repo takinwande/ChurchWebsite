@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { client } from '@/lib/sanity/client'
 import { SITE_SETTINGS_QUERY, LATEST_SERMON_QUERY, UPCOMING_EVENTS_QUERY, ACTIVE_FLIERS_QUERY } from '@/lib/sanity/queries'
 import type { SiteSettings, Sermon, Event, ProgramFlier } from '@/lib/types'
+import { getEventWindow } from '@/lib/utils'
 import { Hero } from '@/components/home/Hero'
 import { ServiceTimesSection } from '@/components/home/ServiceTimesSection'
 import { LatestSermon } from '@/components/home/LatestSermon'
@@ -18,12 +19,16 @@ export const metadata: Metadata = {
 }
 
 export default async function HomePage() {
+  // Fliers expire at an exact instant, so they compare against `now`. Events
+  // compare against midnight today in church time, so one running this
+  // afternoon still counts as upcoming.
   const now = new Date().toISOString()
+  const { todayStart } = getEventWindow()
 
   const [settings, latestSermon, upcomingEvents, activeFliers] = await Promise.all([
     client.fetch<SiteSettings>(SITE_SETTINGS_QUERY),
     client.fetch<Sermon | null>(LATEST_SERMON_QUERY),
-    client.fetch<Event[]>(UPCOMING_EVENTS_QUERY, { now }),
+    client.fetch<Event[]>(UPCOMING_EVENTS_QUERY, { todayStart }),
     client.fetch<ProgramFlier[]>(ACTIVE_FLIERS_QUERY, { now }),
   ])
 

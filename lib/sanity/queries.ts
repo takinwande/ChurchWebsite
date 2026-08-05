@@ -4,8 +4,13 @@ export const SITE_SETTINGS_QUERY = groq`
   *[_type == "siteSettings"][0]{
     _id, name, tagline, logo, address, phone, email,
     serviceTimes, socialLinks, givingUrl, livestreamUrl,
-    heroImages, notificationEmail
+    heroImages, notificationEmail, pastEventsWindowDays
   }
+`
+
+/** Just the events window — the events page needs it before it can query events. */
+export const EVENT_WINDOW_SETTING_QUERY = groq`
+  *[_type == "siteSettings"][0]{ pastEventsWindowDays }
 `
 
 export const ANNOUNCEMENT_QUERY = groq`
@@ -23,8 +28,11 @@ export const LATEST_SERMON_QUERY = groq`
   }
 `
 
+// $todayStart is midnight today in the church's time zone, so an event still
+// running this afternoon is counted as upcoming rather than dropping off the
+// moment its start time passes.
 export const UPCOMING_EVENTS_QUERY = groq`
-  *[_type == "event" && startDateTime > $now] | order(startDateTime asc)[0...3]{
+  *[_type == "event" && startDateTime >= $todayStart] | order(startDateTime asc)[0...3]{
     _id, title, slug, startDateTime, endDateTime, location,
     "imageUrl": image.asset->url
   }
@@ -68,11 +76,25 @@ export const SERMON_BY_SLUG_QUERY = groq`
   }
 `
 
+const EVENT_LIST_FIELDS = `
+  _id, title, slug, startDateTime, endDateTime,
+  location, registrationUrl, featured,
+  "imageUrl": image.asset->url
+`
+
+/**
+ * Splits events into the two groups the page renders, filtered in GROQ rather
+ * than in JS so events older than the window are never fetched at all.
+ *
+ * Upcoming runs soonest-first; past runs most-recent-first, which is the more
+ * useful order when looking back.
+ */
 export const EVENTS_QUERY = groq`
-  *[_type == "event"] | order(startDateTime asc){
-    _id, title, slug, startDateTime, endDateTime,
-    location, registrationUrl, featured,
-    "imageUrl": image.asset->url
+  {
+    "upcoming": *[_type == "event" && startDateTime >= $todayStart]
+      | order(startDateTime asc){ ${EVENT_LIST_FIELDS} },
+    "past": *[_type == "event" && startDateTime < $todayStart && startDateTime >= $pastCutoff]
+      | order(startDateTime desc){ ${EVENT_LIST_FIELDS} }
   }
 `
 
