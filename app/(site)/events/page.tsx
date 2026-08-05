@@ -52,7 +52,7 @@ export default async function EventsPage() {
               {upcoming.map((event) => (
                 <StaggerItem key={event._id}>
                   <AnimatedCard>
-                    <EventCard event={event} />
+                    <EventCard event={event} isPast={false} />
                   </AnimatedCard>
                 </StaggerItem>
               ))}
@@ -78,7 +78,7 @@ export default async function EventsPage() {
               {past.map((event) => (
                 <StaggerItem key={event._id}>
                   <AnimatedCard>
-                    <EventCard event={event} />
+                    <EventCard event={event} isPast />
                   </AnimatedCard>
                 </StaggerItem>
               ))}
