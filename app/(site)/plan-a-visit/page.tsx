@@ -62,7 +62,7 @@ export default async function PlanVisitPage() {
               {settings?.serviceTimes && settings.serviceTimes.length > 0 ? (
                 <div className="grid gap-3 sm:grid-cols-2">
                   {settings.serviceTimes.map((s, i) => (
-                    <div key={i} className="rounded-xl border border-border bg-slate-50 p-4">
+                    <div key={i} className="rounded-xl border border-border bg-muted/40 p-4">
                       <p className="font-semibold text-foreground">{s.name}</p>
                       <p className="mt-0.5 text-sm text-muted-foreground">
                         {s.day} &middot; {s.time}
@@ -71,7 +71,7 @@ export default async function PlanVisitPage() {
                   ))}
                 </div>
               ) : (
-                <div className="rounded-xl border border-border bg-slate-50 p-4">
+                <div className="rounded-xl border border-border bg-muted/40 p-4">
                   <p className="font-semibold text-foreground">Sunday Worship Service</p>
                   <p className="mt-0.5 text-sm text-muted-foreground">Sunday &middot; 10:00 AM</p>
                 </div>
@@ -116,7 +116,7 @@ export default async function PlanVisitPage() {
               <p className="mb-4 text-muted-foreground">{addressLine}</p>
 
               {/* Google Maps embed */}
-              <div className="overflow-hidden rounded-xl border border-border aspect-[16/9] bg-slate-100">
+              <div className="overflow-hidden rounded-xl border border-border aspect-[16/9] bg-muted">
                 <iframe
                   src={`https://maps.google.com/maps?q=${encodeURIComponent(addressLine)}&output=embed`}
                   title="Church location map"

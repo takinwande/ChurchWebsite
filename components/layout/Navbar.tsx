@@ -7,6 +7,7 @@ import { usePathname } from 'next/navigation'
 import { useScroll, useMotionValueEvent } from 'framer-motion'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
+import { ThemeToggle } from '@/components/theme/ThemeToggle'
 import { MobileMenu } from './MobileMenu'
 
 const navLinks = [
@@ -72,7 +73,8 @@ export function Navbar() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 sm:gap-2">
+          <ThemeToggle />
           <Button asChild size="sm" className="hidden lg:inline-flex">
             <Link href="/give">Give</Link>
           </Button>
