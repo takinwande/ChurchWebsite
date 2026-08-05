@@ -21,8 +21,6 @@ export const DEFAULT_PAST_EVENTS_WINDOW_DAYS = 10
 /** Upper bound on the editable window, matching the Sanity field's validation. */
 export const MAX_PAST_EVENTS_WINDOW_DAYS = 365
 
-const MS_PER_DAY = 86_400_000
-
 /**
  * Turns the Site Settings value into a usable number of days.
  *
@@ -38,36 +36,33 @@ export function resolvePastEventsWindowDays(value?: number | null): number {
   return Math.min(Math.max(Math.floor(value), 0), MAX_PAST_EVENTS_WINDOW_DAYS)
 }
 
-/** The zone's UTC offset at `date`, as an ISO suffix like `-07:00`. */
-function zoneOffset(date: Date, timeZone: string): string {
-  const label = new Intl.DateTimeFormat('en-US', { timeZone, timeZoneName: 'longOffset' })
-    .formatToParts(date)
-    .find((part) => part.type === 'timeZoneName')?.value // e.g. "GMT-07:00"
-
-  return label?.match(/GMT([+-]\d{2}:\d{2})/)?.[1] ?? 'Z'
-}
-
 /**
- * Midnight at the start of `date`'s day *in `timeZone`*, as a real instant.
+ * The calendar date at `date` *in `timeZone`*, as `YYYY-MM-DD`.
  *
- * Server code runs in UTC on Vercel, so deriving "today" from the server clock
- * would roll the date over at 5pm in Phoenix — an event happening this evening
- * would be classified as yesterday's. Resolving the boundary in the church's
- * own zone avoids that.
- *
- * Assumes the zone's offset does not change within the day, which holds for
- * Phoenix (no DST).
+ * Server code runs in UTC on Vercel, so reading the date off the server clock
+ * would roll it over at 5pm in Phoenix — an event happening this evening would
+ * be treated as yesterday's.
  */
-export function startOfDayInTimeZone(date: Date, timeZone: string = CHURCH_TIME_ZONE): Date {
+export function calendarDateInTimeZone(
+  date: Date = new Date(),
+  timeZone: string = CHURCH_TIME_ZONE
+): string {
   // 'en-CA' formats as YYYY-MM-DD.
-  const ymd = new Intl.DateTimeFormat('en-CA', {
+  return new Intl.DateTimeFormat('en-CA', {
     timeZone,
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
   }).format(date)
+}
 
-  return new Date(`${ymd}T00:00:00${zoneOffset(date, timeZone)}`)
+/** Shifts a `YYYY-MM-DD` string by whole calendar days. */
+function shiftCalendarDate(ymd: string, days: number): string {
+  // Anchored to UTC purely for the arithmetic; only the date part is kept, so
+  // no zone offset or DST transition can leak into the result.
+  const d = new Date(`${ymd}T00:00:00Z`)
+  d.setUTCDate(d.getUTCDate() + days)
+  return d.toISOString().slice(0, 10)
 }
 
 export interface EventWindow {
@@ -82,6 +77,14 @@ export interface EventWindow {
  * anything older. Keeps the events list self-managing — nothing has to be
  * deleted by hand in the Studio.
  *
+ * These are **naive local datetime strings**, deliberately without a zone
+ * suffix, because that is how `startDateTime` is stored: editors type a
+ * wall-clock time in the Studio and Sanity persists it as e.g.
+ * `2026-08-04T19:00:00`. Comparing those against a UTC instant would skew every
+ * comparison by the zone's offset — a date-only event stored at midnight would
+ * sort seven hours "before" the start of its own day and show up under
+ * Recently Past on the day it actually happens.
+ *
  * `windowDays` comes from Site Settings; pass it through
  * {@link resolvePastEventsWindowDays} first.
  */
@@ -89,11 +92,11 @@ export function getEventWindow(
   now: Date = new Date(),
   windowDays: number = DEFAULT_PAST_EVENTS_WINDOW_DAYS
 ): EventWindow {
-  const todayStart = startOfDayInTimeZone(now)
+  const today = calendarDateInTimeZone(now)
 
   return {
-    todayStart: todayStart.toISOString(),
-    pastCutoff: new Date(todayStart.getTime() - windowDays * MS_PER_DAY).toISOString(),
+    todayStart: `${today}T00:00:00`,
+    pastCutoff: `${shiftCalendarDate(today, -windowDays)}T00:00:00`,
   }
 }
 

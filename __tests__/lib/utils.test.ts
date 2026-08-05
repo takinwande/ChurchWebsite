@@ -7,7 +7,7 @@ import {
   truncate,
   getYouTubeEmbedUrl,
   formatPhoneNumber,
-  startOfDayInTimeZone,
+  calendarDateInTimeZone,
   getEventWindow,
   resolvePastEventsWindowDays,
   DEFAULT_PAST_EVENTS_WINDOW_DAYS,
@@ -168,75 +168,78 @@ describe('formatPhoneNumber', () => {
   })
 })
 
-describe('startOfDayInTimeZone', () => {
-  it('resolves midnight in the church zone, not the server zone', () => {
+describe('calendarDateInTimeZone', () => {
+  it('reports the church-local date, not the server-local one', () => {
     // 2026-08-04T23:30:00Z is 4:30pm on Aug 4 in Phoenix (UTC-7).
-    const result = startOfDayInTimeZone(new Date('2026-08-04T23:30:00Z'))
-    expect(result.toISOString()).toBe('2026-08-04T07:00:00.000Z') // midnight Phoenix
+    expect(calendarDateInTimeZone(new Date('2026-08-04T23:30:00Z'))).toBe('2026-08-04')
   })
 
   // The regression that motivated this: a UTC server rolls the date over at
-  // 5pm Phoenix time, so an evening event would be classified as yesterday's.
+  // 5pm Phoenix time, so an evening event would be treated as yesterday's.
   it('still reports the same local day after UTC has rolled over', () => {
     // 2026-08-05T02:00:00Z is 7pm on Aug 4 in Phoenix — already Aug 5 in UTC.
-    const result = startOfDayInTimeZone(new Date('2026-08-05T02:00:00Z'))
-    expect(result.toISOString()).toBe('2026-08-04T07:00:00.000Z') // still Aug 4
+    expect(calendarDateInTimeZone(new Date('2026-08-05T02:00:00Z'))).toBe('2026-08-04')
   })
 
   it('handles the moment just after local midnight', () => {
-    // 2026-08-04T07:01:00Z is 12:01am on Aug 4 in Phoenix.
-    const result = startOfDayInTimeZone(new Date('2026-08-04T07:01:00Z'))
-    expect(result.toISOString()).toBe('2026-08-04T07:00:00.000Z')
+    expect(calendarDateInTimeZone(new Date('2026-08-04T07:01:00Z'))).toBe('2026-08-04')
   })
 
   it('honours an explicit time zone', () => {
-    // Same instant, but UTC — the day boundary differs.
-    const result = startOfDayInTimeZone(new Date('2026-08-05T02:00:00Z'), 'UTC')
-    expect(result.toISOString()).toBe('2026-08-05T00:00:00.000Z')
+    expect(calendarDateInTimeZone(new Date('2026-08-05T02:00:00Z'), 'UTC')).toBe('2026-08-05')
   })
 })
 
 describe('getEventWindow', () => {
   const now = new Date('2026-08-04T23:30:00Z') // 4:30pm Aug 4, Phoenix
 
-  it('starts the upcoming window at midnight today, not the current time', () => {
-    expect(getEventWindow(now).todayStart).toBe('2026-08-04T07:00:00.000Z')
-  })
-
-  it('cuts past events off exactly PAST_EVENTS_WINDOW_DAYS before today', () => {
+  // startDateTime is stored as a naive wall-clock string, so the boundaries
+  // must be too — a UTC instant would skew every comparison by the offset.
+  it('emits naive local datetimes with no zone suffix', () => {
     const { todayStart, pastCutoff } = getEventWindow(now)
-    const days = (Date.parse(todayStart) - Date.parse(pastCutoff)) / 86_400_000
-    expect(days).toBe(DEFAULT_PAST_EVENTS_WINDOW_DAYS)
+    expect(todayStart).toBe('2026-08-04T00:00:00')
+    expect(pastCutoff).toBe('2026-07-25T00:00:00')
+    expect(todayStart).not.toMatch(/Z$|[+-]\d{2}:\d{2}$/)
   })
 
-  it('places the cutoff 10 days back', () => {
-    expect(getEventWindow(now).pastCutoff).toBe('2026-07-25T07:00:00.000Z')
+  // Regression: with a UTC-instant boundary this event sorted seven hours
+  // "before" the start of its own day and appeared under Recently Past.
+  it('counts a date-only event as upcoming on the day it happens', () => {
+    const { todayStart } = getEventWindow(now)
+    expect('2026-08-04T00:00:00' >= todayStart).toBe(true)
   })
 
-  // An event earlier today must land in "upcoming", which is the whole point
-  // of anchoring to midnight rather than to now.
   it('classifies an event earlier today as upcoming', () => {
     const { todayStart } = getEventWindow(now)
-    const thisMorning = new Date('2026-08-04T17:00:00Z') // 10am Phoenix, already passed
-    expect(thisMorning.toISOString() >= todayStart).toBe(true)
+    expect('2026-08-04T10:00:00' >= todayStart).toBe(true)
   })
 
   it('excludes an event older than the past window', () => {
     const { pastCutoff } = getEventWindow(now)
-    const tooOld = new Date('2026-07-24T18:00:00Z') // 11 days back
-    expect(tooOld.toISOString() >= pastCutoff).toBe(false)
+    expect('2026-07-24T18:00:00' >= pastCutoff).toBe(false)
   })
 
   it('includes an event just inside the past window', () => {
     const { pastCutoff, todayStart } = getEventWindow(now)
-    const justInside = new Date('2026-07-25T18:00:00Z') // ~10 days back
-    expect(justInside.toISOString() >= pastCutoff).toBe(true)
-    expect(justInside.toISOString() < todayStart).toBe(true)
+    expect('2026-07-25T18:00:00' >= pastCutoff).toBe(true)
+    expect('2026-07-25T18:00:00' < todayStart).toBe(true)
+  })
+
+  it('spans exactly the configured number of days', () => {
+    const { todayStart, pastCutoff } = getEventWindow(now)
+    const days =
+      (Date.parse(todayStart + 'Z') - Date.parse(pastCutoff + 'Z')) / 86_400_000
+    expect(days).toBe(DEFAULT_PAST_EVENTS_WINDOW_DAYS)
+  })
+
+  it('crosses a month boundary correctly', () => {
+    expect(getEventWindow(new Date('2026-03-05T20:00:00Z'), 10).pastCutoff).toBe(
+      '2026-02-23T00:00:00'
+    )
   })
 
   it('defaults to the current time when called with no argument', () => {
-    expect(() => getEventWindow()).not.toThrow()
-    expect(getEventWindow().todayStart).toMatch(/^\d{4}-\d{2}-\d{2}T/)
+    expect(getEventWindow().todayStart).toMatch(/^\d{4}-\d{2}-\d{2}T00:00:00$/)
   })
 })
 
@@ -279,7 +282,7 @@ describe('getEventWindow with a configured window', () => {
   const now = new Date('2026-08-04T23:30:00Z') // 4:30pm Aug 4, Phoenix
 
   it('honours a custom window length', () => {
-    expect(getEventWindow(now, 30).pastCutoff).toBe('2026-07-05T07:00:00.000Z')
+    expect(getEventWindow(now, 30).pastCutoff).toBe('2026-07-05T00:00:00')
   })
 
   it('collapses the past window to nothing when given 0', () => {
