@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
 import { client } from '@/lib/sanity/client'
 import { EVENTS_QUERY } from '@/lib/sanity/queries'
-import type { Event } from '@/lib/types'
+import { getEventWindow, PAST_EVENTS_WINDOW_DAYS } from '@/lib/utils'
+import type { GroupedEvents } from '@/lib/types'
 import { EventCard } from '@/components/events/EventCard'
 import { CalendarDays } from 'lucide-react'
 import { FadeIn, StaggerContainer, StaggerItem, AnimatedCard } from '@/components/animation'
@@ -14,10 +15,13 @@ export const metadata: Metadata = {
 }
 
 export default async function EventsPage() {
-  const events = await client.fetch<Event[]>(EVENTS_QUERY)
-  const now = new Date()
-  const upcoming = (events ?? []).filter((e) => new Date(e.startDateTime) >= now)
-  const past = (events ?? []).filter((e) => new Date(e.startDateTime) < now)
+  // Grouped and windowed in GROQ — anything older than the past window is never
+  // fetched, so the list stays current without anyone pruning events by hand.
+  const { todayStart, pastCutoff } = getEventWindow()
+  const grouped = await client.fetch<GroupedEvents>(EVENTS_QUERY, { todayStart, pastCutoff })
+
+  const upcoming = grouped?.upcoming ?? []
+  const past = grouped?.past ?? []
 
   return (
     <div className="py-12 sm:py-16">
@@ -55,7 +59,10 @@ export default async function EventsPage() {
         {past.length > 0 && (
           <section className="mt-14" aria-label="Past events">
             <FadeIn>
-              <h2 className="mb-6 text-xl font-semibold text-muted-foreground">Past Events</h2>
+              <h2 className="mb-1 text-xl font-semibold text-muted-foreground">Recently Past</h2>
+              <p className="mb-6 text-sm text-muted-foreground">
+                From the last {PAST_EVENTS_WINDOW_DAYS} days.
+              </p>
             </FadeIn>
             <StaggerContainer className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {past.map((event) => (

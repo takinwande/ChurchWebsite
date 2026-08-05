@@ -110,6 +110,12 @@ export interface Event {
   imageUrl?: string
 }
 
+/** Events split into the two groups the events page renders. */
+export interface GroupedEvents {
+  upcoming: Event[]
+  past: Event[]
+}
+
 export interface FaqItem {
   question: string
   answer: string
