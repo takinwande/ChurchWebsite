@@ -14,7 +14,7 @@ export function UpcomingEvents({ events }: UpcomingEventsProps) {
   if (!events || events.length === 0) return null
 
   return (
-    <section className="bg-slate-50 py-16" aria-label="Upcoming events">
+    <section className="bg-muted/40 py-16" aria-label="Upcoming events">
       <div className="container mx-auto px-4">
         <div className="mx-auto max-w-4xl">
           <FadeIn>

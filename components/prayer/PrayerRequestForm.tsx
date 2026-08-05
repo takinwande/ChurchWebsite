@@ -82,10 +82,10 @@ export function PrayerRequestForm() {
   if (status === 'success') {
     return (
       <div
-        className="flex flex-col items-center rounded-xl border border-green-200 bg-green-50 p-8 text-center"
+        className="flex flex-col items-center rounded-xl border border-green-200 bg-green-50 dark:border-green-900 dark:bg-green-950 p-8 text-center"
         role="alert"
       >
-        <CheckCircle className="mb-3 h-10 w-10 text-green-600" aria-hidden="true" />
+        <CheckCircle className="mb-3 h-10 w-10 text-green-600 dark:text-green-400" aria-hidden="true" />
         <h3 className="text-lg font-semibold text-foreground">Prayer Request Received</h3>
         <p className="mt-1 text-sm text-muted-foreground">
           We will be praying for you. Thank you for trusting us with your request.
@@ -103,7 +103,7 @@ export function PrayerRequestForm() {
 
       {status === 'error' && (
         <div
-          className="flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700"
+          className="flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-300"
           role="alert"
         >
           <AlertCircle className="h-4 w-4 shrink-0" aria-hidden="true" />

@@ -15,7 +15,7 @@ export function AnnouncementBanner({ announcement }: AnnouncementBannerProps) {
   if (!announcement?.enabled || dismissed) return null
 
   return (
-    <div className="relative bg-primary px-4 py-2.5 text-center text-sm text-white">
+    <div className="relative bg-primary px-4 py-2.5 text-center text-sm text-primary-foreground">
       <span>{announcement.text}</span>
       {announcement.link && (
         <Link
@@ -30,7 +30,7 @@ export function AnnouncementBanner({ announcement }: AnnouncementBannerProps) {
       <button
         onClick={() => setDismissed(true)}
         aria-label="Dismiss announcement"
-        className="absolute right-3 top-1/2 -translate-y-1/2 rounded p-0.5 opacity-80 transition-opacity hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+        className="absolute right-3 top-1/2 -translate-y-1/2 rounded p-0.5 opacity-80 transition-opacity hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-foreground"
       >
         <X className="h-4 w-4" />
       </button>
