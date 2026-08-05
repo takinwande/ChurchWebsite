@@ -58,6 +58,15 @@ export const siteSettings = defineType({
         fields: [defineField({ name: 'alt', type: 'string', title: 'Alt text' })],
       }],
     }),
+    defineField({
+      name: 'pastEventsWindowDays',
+      title: 'Show Past Events For (days)',
+      type: 'number',
+      description:
+        'How long a finished event keeps showing under “Recently Past” on the Events page. Older events disappear on their own — you never need to delete them. Set to 0 to hide past events entirely. Leave blank for the default of 10 days.',
+      initialValue: 10,
+      validation: (r) => r.min(0).max(365).integer(),
+    }),
     defineField({ name: 'givingUrl', title: 'Online Giving URL', type: 'url' }),
     defineField({ name: 'livestreamUrl', title: 'Livestream URL', type: 'url' }),
     defineField({

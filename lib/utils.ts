@@ -12,10 +12,31 @@ export function cn(...inputs: ClassValue[]) {
  */
 export const CHURCH_TIME_ZONE = 'America/Phoenix'
 
-/** How far back past events stay listed before dropping off on their own. */
-export const PAST_EVENTS_WINDOW_DAYS = 10
+/**
+ * Fallback for how far back past events stay listed. Editors override this in
+ * Site Settings → "Show Past Events For (days)"; this applies when it's blank.
+ */
+export const DEFAULT_PAST_EVENTS_WINDOW_DAYS = 10
+
+/** Upper bound on the editable window, matching the Sanity field's validation. */
+export const MAX_PAST_EVENTS_WINDOW_DAYS = 365
 
 const MS_PER_DAY = 86_400_000
+
+/**
+ * Turns the Site Settings value into a usable number of days.
+ *
+ * The field is editable in the Studio, so it can arrive blank, non-numeric, or
+ * out of range — Sanity validation warns but does not block saving. Anything
+ * unusable falls back to the default, and valid input is clamped so a stray
+ * value can't empty the events page or make it unbounded.
+ */
+export function resolvePastEventsWindowDays(value?: number | null): number {
+  if (typeof value !== 'number' || !Number.isFinite(value)) {
+    return DEFAULT_PAST_EVENTS_WINDOW_DAYS
+  }
+  return Math.min(Math.max(Math.floor(value), 0), MAX_PAST_EVENTS_WINDOW_DAYS)
+}
 
 /** The zone's UTC offset at `date`, as an ISO suffix like `-07:00`. */
 function zoneOffset(date: Date, timeZone: string): string {
@@ -60,13 +81,19 @@ export interface EventWindow {
  * Boundaries that split events into upcoming vs. recently past, and drop
  * anything older. Keeps the events list self-managing — nothing has to be
  * deleted by hand in the Studio.
+ *
+ * `windowDays` comes from Site Settings; pass it through
+ * {@link resolvePastEventsWindowDays} first.
  */
-export function getEventWindow(now: Date = new Date()): EventWindow {
+export function getEventWindow(
+  now: Date = new Date(),
+  windowDays: number = DEFAULT_PAST_EVENTS_WINDOW_DAYS
+): EventWindow {
   const todayStart = startOfDayInTimeZone(now)
 
   return {
     todayStart: todayStart.toISOString(),
-    pastCutoff: new Date(todayStart.getTime() - PAST_EVENTS_WINDOW_DAYS * MS_PER_DAY).toISOString(),
+    pastCutoff: new Date(todayStart.getTime() - windowDays * MS_PER_DAY).toISOString(),
   }
 }
 

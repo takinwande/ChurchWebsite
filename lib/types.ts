@@ -42,6 +42,8 @@ export interface SiteSettings {
   givingUrl?: string
   livestreamUrl?: string
   notificationEmail?: string
+  /** Days a finished event stays under "Recently Past". Blank falls back to the default. */
+  pastEventsWindowDays?: number
 }
 
 export interface Announcement {

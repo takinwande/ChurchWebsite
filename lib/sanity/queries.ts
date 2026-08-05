@@ -4,8 +4,13 @@ export const SITE_SETTINGS_QUERY = groq`
   *[_type == "siteSettings"][0]{
     _id, name, tagline, logo, address, phone, email,
     serviceTimes, socialLinks, givingUrl, livestreamUrl,
-    heroImages, notificationEmail
+    heroImages, notificationEmail, pastEventsWindowDays
   }
+`
+
+/** Just the events window — the events page needs it before it can query events. */
+export const EVENT_WINDOW_SETTING_QUERY = groq`
+  *[_type == "siteSettings"][0]{ pastEventsWindowDays }
 `
 
 export const ANNOUNCEMENT_QUERY = groq`

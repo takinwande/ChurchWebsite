@@ -9,7 +9,9 @@ import {
   formatPhoneNumber,
   startOfDayInTimeZone,
   getEventWindow,
-  PAST_EVENTS_WINDOW_DAYS,
+  resolvePastEventsWindowDays,
+  DEFAULT_PAST_EVENTS_WINDOW_DAYS,
+  MAX_PAST_EVENTS_WINDOW_DAYS,
 } from '@/lib/utils'
 
 describe('cn', () => {
@@ -204,7 +206,7 @@ describe('getEventWindow', () => {
   it('cuts past events off exactly PAST_EVENTS_WINDOW_DAYS before today', () => {
     const { todayStart, pastCutoff } = getEventWindow(now)
     const days = (Date.parse(todayStart) - Date.parse(pastCutoff)) / 86_400_000
-    expect(days).toBe(PAST_EVENTS_WINDOW_DAYS)
+    expect(days).toBe(DEFAULT_PAST_EVENTS_WINDOW_DAYS)
   })
 
   it('places the cutoff 10 days back', () => {
@@ -235,5 +237,63 @@ describe('getEventWindow', () => {
   it('defaults to the current time when called with no argument', () => {
     expect(() => getEventWindow()).not.toThrow()
     expect(getEventWindow().todayStart).toMatch(/^\d{4}-\d{2}-\d{2}T/)
+  })
+})
+
+describe('resolvePastEventsWindowDays', () => {
+  it('uses the editor-supplied value', () => {
+    expect(resolvePastEventsWindowDays(30)).toBe(30)
+  })
+
+  it('allows 0, meaning hide past events entirely', () => {
+    expect(resolvePastEventsWindowDays(0)).toBe(0)
+  })
+
+  // The Studio field can be left blank, and Sanity validation warns without
+  // blocking a save — so anything unusable has to fall back rather than throw.
+  it.each([
+    ['undefined', undefined],
+    ['null', null],
+    ['NaN', NaN],
+    ['Infinity', Infinity],
+  ])('falls back to the default for %s', (_label, value) => {
+    expect(resolvePastEventsWindowDays(value as number | null | undefined)).toBe(
+      DEFAULT_PAST_EVENTS_WINDOW_DAYS
+    )
+  })
+
+  it('clamps a negative value up to 0 rather than inverting the window', () => {
+    expect(resolvePastEventsWindowDays(-5)).toBe(0)
+  })
+
+  it('clamps an oversized value to the maximum', () => {
+    expect(resolvePastEventsWindowDays(99_999)).toBe(MAX_PAST_EVENTS_WINDOW_DAYS)
+  })
+
+  it('floors a fractional value', () => {
+    expect(resolvePastEventsWindowDays(10.9)).toBe(10)
+  })
+})
+
+describe('getEventWindow with a configured window', () => {
+  const now = new Date('2026-08-04T23:30:00Z') // 4:30pm Aug 4, Phoenix
+
+  it('honours a custom window length', () => {
+    expect(getEventWindow(now, 30).pastCutoff).toBe('2026-07-05T07:00:00.000Z')
+  })
+
+  it('collapses the past window to nothing when given 0', () => {
+    const { todayStart, pastCutoff } = getEventWindow(now, 0)
+    expect(pastCutoff).toBe(todayStart)
+  })
+
+  it('leaves the upcoming boundary unaffected by the window length', () => {
+    expect(getEventWindow(now, 1).todayStart).toBe(getEventWindow(now, 365).todayStart)
+  })
+
+  it('defaults to DEFAULT_PAST_EVENTS_WINDOW_DAYS when omitted', () => {
+    expect(getEventWindow(now).pastCutoff).toBe(
+      getEventWindow(now, DEFAULT_PAST_EVENTS_WINDOW_DAYS).pastCutoff
+    )
   })
 })
