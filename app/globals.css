@@ -47,4 +47,9 @@
   h1, h2, h3, h4, h5, h6 {
     @apply tracking-tight;
   }
+  /* Opt interactive elements out of double-tap-to-zoom so the first tap
+     registers immediately. Body text keeps normal zoom behaviour. */
+  a, button {
+    touch-action: manipulation;
+  }
 }
