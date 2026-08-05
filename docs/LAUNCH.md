@@ -32,20 +32,19 @@ separately, per environment.
       `https://your-domain.com`, locally and in Vercel. It feeds `sitemap.xml`,
       `robots.txt` and OpenGraph tags, so shipping as-is publishes
       `your-domain.com` URLs to crawlers.
-- [ ] **`SANITY_API_WRITE_TOKEN`** — ⚠️ **the token currently in `.env.local`
-      does not work for this.** It authenticates and reads fine, but has no
-      `create` permission — verified with a dry-run mutation, which Sanity
-      rejects with *"Insufficient permissions; permission 'create' required"*.
-      Despite the variable name it is effectively a read token.
+- [ ] **`SANITY_API_WRITE_TOKEN`** — must have **Editor** permission, not just
+      read. Create at [sanity.io/manage](https://sanity.io/manage) → API →
+      Tokens → Add API token. Shown once; copy immediately.
 
-      Both form routes persist to Sanity before emailing, so copying this token
-      into Vercel would leave the contact and prayer forms returning 500 exactly
-      as they do now. **Issue a new token** at
-      [sanity.io/manage](https://sanity.io/manage) → API → Tokens → Add API
-      token, permission **Editor**, and replace it in both `.env.local` *and*
-      Vercel. Shown once; copy immediately.
+      ⚠️ **Verify the token before trusting it.** A read-only token
+      authenticates and queries perfectly well, and fails only at the moment it
+      tries to write — so it looks correct right up until a visitor submits a
+      form. `.env.local` previously held exactly such a token: reads succeeded,
+      writes were rejected with *"Insufficient permissions; permission 'create'
+      required"*. Both form routes persist to Sanity before emailing, so an
+      under-privileged token means every submission returns 500.
 
-      Quick check that a token can actually write:
+      This check writes nothing and prints an error if the token can't create:
 
       ```bash
       curl -s -X POST -H "Authorization: Bearer $TOKEN" \
@@ -53,6 +52,10 @@ separately, per environment.
         -d '{"mutations":[],"dryRun":true}' \
         "https://<projectId>.api.sanity.io/v2024-01-01/data/mutate/production"
       ```
+
+      The local token has since been replaced with a working Editor token —
+      confirmed by seeding the August 2026 calendar. **The same one still needs
+      adding to Vercel**, where no write token exists yet.
 - [ ] **`RESEND_API_KEY`** — reuse the existing send-only restricted key.
 - [ ] Add each to **Production, Preview and Development**.
 - [ ] Redeploy — env vars only apply to *new* deployments.

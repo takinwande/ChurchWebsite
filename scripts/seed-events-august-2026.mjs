@@ -191,6 +191,17 @@ async function main() {
     } catch (err) {
       console.error(`  ❌  ${doc.title}  — ${err.message}`)
       failed++
+
+      // A read-only token passes the "is a token set?" check above and only
+      // fails here, so name the cause rather than repeating it 16 times.
+      if (/permission/i.test(err.message)) {
+        console.error(
+          `\n💡  That token can authenticate but not write. Issue one with ` +
+            `"Editor" permission at https://sanity.io/manage → API → Tokens, ` +
+            `then set SANITY_API_WRITE_TOKEN in .env.local.\n`
+        )
+        break
+      }
     }
   }
 
