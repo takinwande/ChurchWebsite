@@ -32,10 +32,27 @@ separately, per environment.
       `https://your-domain.com`, locally and in Vercel. It feeds `sitemap.xml`,
       `robots.txt` and OpenGraph tags, so shipping as-is publishes
       `your-domain.com` URLs to crawlers.
-- [ ] **`SANITY_API_WRITE_TOKEN`** — create at
-      [sanity.io/manage](https://sanity.io/manage) → API → Tokens, permission
-      **Editor**. Shown once; copy immediately. Both form routes persist to
-      Sanity before emailing, so without this every submission fails.
+- [ ] **`SANITY_API_WRITE_TOKEN`** — ⚠️ **the token currently in `.env.local`
+      does not work for this.** It authenticates and reads fine, but has no
+      `create` permission — verified with a dry-run mutation, which Sanity
+      rejects with *"Insufficient permissions; permission 'create' required"*.
+      Despite the variable name it is effectively a read token.
+
+      Both form routes persist to Sanity before emailing, so copying this token
+      into Vercel would leave the contact and prayer forms returning 500 exactly
+      as they do now. **Issue a new token** at
+      [sanity.io/manage](https://sanity.io/manage) → API → Tokens → Add API
+      token, permission **Editor**, and replace it in both `.env.local` *and*
+      Vercel. Shown once; copy immediately.
+
+      Quick check that a token can actually write:
+
+      ```bash
+      curl -s -X POST -H "Authorization: Bearer $TOKEN" \
+        -H "Content-Type: application/json" \
+        -d '{"mutations":[],"dryRun":true}' \
+        "https://<projectId>.api.sanity.io/v2024-01-01/data/mutate/production"
+      ```
 - [ ] **`RESEND_API_KEY`** — reuse the existing send-only restricted key.
 - [ ] Add each to **Production, Preview and Development**.
 - [ ] Redeploy — env vars only apply to *new* deployments.
