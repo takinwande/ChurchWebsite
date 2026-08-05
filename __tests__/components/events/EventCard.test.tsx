@@ -51,26 +51,41 @@ describe('EventCard', () => {
     expect(screen.queryByText('Featured')).not.toBeInTheDocument()
   })
 
-  it('shows "Past Event" badge for past events', () => {
-    render(<EventCard event={pastEvent} />)
+  it('shows "Past Event" badge when marked past', () => {
+    render(<EventCard event={pastEvent} isPast />)
     expect(screen.getByText('Past Event')).toBeInTheDocument()
   })
 
-  it('does not show "Past Event" badge for future events', () => {
-    render(<EventCard event={futureEvent} />)
+  it('does not show "Past Event" badge when not marked past', () => {
+    render(<EventCard event={futureEvent} isPast={false} />)
     expect(screen.queryByText('Past Event')).not.toBeInTheDocument()
   })
 
-  it('applies opacity-70 class to the card for past events', () => {
-    const { container } = render(<EventCard event={pastEvent} />)
+  it('applies opacity-70 class when marked past', () => {
+    const { container } = render(<EventCard event={pastEvent} isPast />)
     const card = container.firstChild as HTMLElement
     expect(card).toHaveClass('opacity-70')
   })
 
-  it('does not apply opacity-70 class for future events', () => {
-    const { container } = render(<EventCard event={futureEvent} />)
+  it('does not apply opacity-70 class when not marked past', () => {
+    const { container } = render(<EventCard event={futureEvent} isPast={false} />)
     const card = container.firstChild as HTMLElement
     expect(card).not.toHaveClass('opacity-70')
+  })
+
+  it('treats the card as upcoming by default', () => {
+    const { container } = render(<EventCard event={futureEvent} />)
+    expect(screen.queryByText('Past Event')).not.toBeInTheDocument()
+    expect(container.firstChild as HTMLElement).not.toHaveClass('opacity-70')
+  })
+
+  // Regression: the badge used to derive from `new Date()`, so an event
+  // happening later today was dimmed and labelled "Past Event" while the
+  // events page still listed it under Upcoming.
+  it('does not label a same-day event as past when the page groups it as upcoming', () => {
+    const earlierToday = { ...futureEvent, startDateTime: '2020-01-01T09:00:00' }
+    render(<EventCard event={earlierToday} isPast={false} />)
+    expect(screen.queryByText('Past Event')).not.toBeInTheDocument()
   })
 
   it('renders "Register" button with correct href when registrationUrl is provided', () => {

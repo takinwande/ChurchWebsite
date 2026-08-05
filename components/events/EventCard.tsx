@@ -8,10 +8,19 @@ import type { Event } from '@/lib/types'
 
 interface EventCardProps {
   event: Event
+  /**
+   * Whether the event has already happened.
+   *
+   * Passed in rather than derived from `new Date()`, so the badge always agrees
+   * with the section the card is rendered under. The events page groups on
+   * midnight today, so deriving from the current instant would dim an event
+   * happening later today and label it "Past Event" while the page still lists
+   * it under Upcoming.
+   */
+  isPast?: boolean
 }
 
-export function EventCard({ event }: EventCardProps) {
-  const isPast = new Date(event.startDateTime) < new Date()
+export function EventCard({ event, isPast = false }: EventCardProps) {
 
   return (
     <Card className={`flex flex-col h-full transition-shadow hover:shadow-md ${isPast ? 'opacity-70' : ''}`}>

@@ -52,7 +52,7 @@ export default async function EventsPage() {
               {upcoming.map((event) => (
                 <StaggerItem key={event._id}>
                   <AnimatedCard>
-                    <EventCard event={event} />
+                    <EventCard event={event} isPast={false} />
                   </AnimatedCard>
                 </StaggerItem>
               ))}
@@ -69,16 +69,13 @@ export default async function EventsPage() {
         {past.length > 0 && (
           <section className="mt-14" aria-label="Past events">
             <FadeIn>
-              <h2 className="mb-1 text-xl font-semibold text-muted-foreground">Recently Past</h2>
-              <p className="mb-6 text-sm text-muted-foreground">
-                From the last {windowDays} {windowDays === 1 ? 'day' : 'days'}.
-              </p>
+              <h2 className="mb-6 text-xl font-semibold text-muted-foreground">Past Events</h2>
             </FadeIn>
             <StaggerContainer className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {past.map((event) => (
                 <StaggerItem key={event._id}>
                   <AnimatedCard>
-                    <EventCard event={event} />
+                    <EventCard event={event} isPast />
                   </AnimatedCard>
                 </StaggerItem>
               ))}
