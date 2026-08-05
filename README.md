@@ -45,6 +45,11 @@ NEXT_PUBLIC_SANITY_PROJECT_ID=your_project_id_here
 NEXT_PUBLIC_SANITY_DATASET=production
 NEXT_PUBLIC_SANITY_API_VERSION=2024-01-01
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
+
+# Server-only — required for the contact and prayer forms
+SANITY_API_WRITE_TOKEN=your_write_token
+RESEND_API_KEY=re_xxxx
+RESEND_FROM_EMAIL=noreply@yourdomain.com
 ```
 
 ### 4. Run the development server
@@ -119,14 +124,34 @@ After deploy, add your Vercel domain to Sanity CORS origins:
 
 ---
 
-## Enabling the Contact Form Email
+## Form Submissions & Email
 
-The contact form currently logs submissions to the server console. To send real emails:
+The contact and prayer forms both **store every submission in Sanity first**, then
+send an email notification. If email delivery fails the submission is still safe —
+find it in Studio under **Contact Submissions** or **Prayer Requests**.
+
+The notification recipient is set in Studio under **Site Settings → Notification
+Email**; no redeploy needed to change it.
+
+### Configuring the sender
 
 1. Create a [Resend](https://resend.com) account (free tier available).
-2. Verify your sending domain (or use the `onboarding@resend.dev` address for testing).
-3. Add `RESEND_API_KEY=re_xxxx` to your environment variables.
-4. Edit [app/api/contact/route.ts](app/api/contact/route.ts) and follow the `TODO` instructions inside.
+2. Add `RESEND_API_KEY=re_xxxx` to your environment variables.
+3. **Verify your sending domain** in Resend, then set `RESEND_FROM_EMAIL` to an
+   address on it (e.g. `noreply@covenantassembly.org`).
+
+> ⚠️ Step 3 is not optional in production. Without `RESEND_FROM_EMAIL`, mail goes
+> out from `onboarding@resend.dev` — Resend's shared test sender, which **only
+> delivers to the Resend account owner's own address**. Every other recipient is
+> rejected, so notifications will silently fail to arrive. Submissions are still
+> stored in Sanity, and the failure is logged to the Vercel function logs.
+
+### Spam protection
+
+Both forms carry a hidden honeypot field and are rate-limited to 5 submissions
+per minute per IP. The limiter is in-process, so on Vercel the effective limit
+scales with the number of warm instances — enough to stop naive bot floods, but
+swap in a shared store (Redis) if you need a hard guarantee.
 
 ---
 
@@ -171,6 +196,11 @@ All content is managed in Sanity Studio at `/studio`:
 | **Sermon Series** | Group sermons by series |
 | **Speakers** | Speaker profiles used in sermons |
 | **Events** | Title, date/time, location, registration link |
+| **Program Fliers** | Homepage rotating fliers with an expiry date |
+| **Ministries** | Ministry groups shown on `/ministries` |
+| **Gallery Albums** | Photo albums shown on `/gallery` |
+| **Prayer Requests** | Submissions from `/prayer` (read-only) |
+| **Contact Submissions** | Submissions from `/contact` (read-only) |
 
 ---
 

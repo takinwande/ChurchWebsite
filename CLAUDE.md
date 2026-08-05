@@ -86,7 +86,10 @@ __mocks__/             # Jest mocks (Next.js Image, Link, Navigation)
 ### Form Pattern
 - Client-side validation (instant feedback) + server-side validation (security)
 - Success/error state managed locally in the component
-- POST to `/api/<name>` route, which validates → stores in Sanity → emails via Resend
+- Every public form includes `<HoneypotField>` (`components/forms/`) — a `website` field real users never see
+- POST to `/api/<name>` route, which runs: honeypot → rate limit (`lib/rate-limit.ts`) → validation → **store in Sanity** → email via Resend
+- **Persist before emailing.** The Sanity write is the durable record; email is only a notification. A failed send is logged loudly but still returns success, because the submission is safe. A failed *write* returns 500.
+- **Always check Resend's `error` field.** `resend.emails.send()` resolves with `{ data, error }` and does *not* throw on API failures — use `sendNotificationEmail()` in `lib/notifications.ts`, which handles this.
 
 ### Singleton Sanity Documents
 - `siteSettings`, `announcement`, `planVisitPage`, `aboutPage`, `contactPage`
@@ -129,6 +132,7 @@ __mocks__/             # Jest mocks (Next.js Image, Link, Navigation)
 | `galleryAlbum` | document | title, slug, cover image, photos array |
 | `ministry` | document | name, slug, tagline, description, order |
 | `prayerRequest` | document | name, email, request, anonymous flag, status |
+| `contactSubmission` | document | name, email, subject, message, submittedAt, status — written by the contact form |
 | `planVisitPage` | singleton | hero text, "what to expect" body, FAQ items |
 | `aboutPage` | singleton | mission, vision, beliefs, leadership array |
 | `contactPage` | singleton | address, phone, email, office hours, map embed URL |
@@ -163,7 +167,14 @@ NEXT_PUBLIC_SITE_URL=                # Full URL (for metadata/sitemap)
 # Server-only
 SANITY_API_WRITE_TOKEN=              # For writing to Sanity (forms)
 RESEND_API_KEY=                      # Resend email API key
+RESEND_FROM_EMAIL=                   # Verified sender, e.g. noreply@covenantassembly.org
 ```
+
+> **`RESEND_FROM_EMAIL` matters in production.** Without it, mail is sent from
+> `onboarding@resend.dev` — Resend's shared test sender, which only delivers to
+> the Resend account owner's own address. Every other recipient is rejected, so
+> notifications to the address configured in Site Settings will not arrive.
+> Verify a domain in Resend and set this variable.
 
 ---
 

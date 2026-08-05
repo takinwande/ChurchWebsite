@@ -62,6 +62,7 @@ export default defineConfig({
             S.documentTypeListItem('galleryAlbum').title('Gallery Albums'),
             S.divider(),
             S.documentTypeListItem('prayerRequest').title('Prayer Requests'),
+            S.documentTypeListItem('contactSubmission').title('Contact Submissions'),
           ]),
     }),
     visionTool(),
