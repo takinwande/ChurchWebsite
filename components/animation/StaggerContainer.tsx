@@ -1,6 +1,6 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
 import { useReducedMotionContext } from './ReducedMotionProvider'
 
 interface StaggerContainerProps {
@@ -23,7 +23,7 @@ export function StaggerContainer({
   }
 
   return (
-    <motion.div
+    <m.div
       className={className}
       initial="hidden"
       whileInView="visible"
@@ -39,6 +39,6 @@ export function StaggerContainer({
       }}
     >
       {children}
-    </motion.div>
+    </m.div>
   )
 }

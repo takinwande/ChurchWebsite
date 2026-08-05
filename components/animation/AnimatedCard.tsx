@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
 import { useReducedMotionContext } from './ReducedMotionProvider'
 
 interface AnimatedCardProps {
@@ -26,12 +26,12 @@ export function AnimatedCard({ children, className }: AnimatedCardProps) {
   }
 
   return (
-    <motion.div
+    <m.div
       className={className}
       whileHover={hoverSupported ? { y: -7 } : undefined}
       transition={{ duration: 0.2, ease: 'easeOut' }}
     >
       {children}
-    </motion.div>
+    </m.div>
   )
 }
