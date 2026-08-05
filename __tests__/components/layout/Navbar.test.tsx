@@ -26,7 +26,7 @@ describe('Navbar', () => {
     const logoLink = screen.getByRole('link', { name: /rccg/i })
     const img = logoLink.querySelector('img')
     expect(img).toBeInTheDocument()
-    expect(img).toHaveAttribute('src', '/logo.jpg')
+    expect(img).toHaveAttribute('src', '/logo.png')
   })
 
   it('renders all desktop navigation links', () => {

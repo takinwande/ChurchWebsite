@@ -60,9 +60,9 @@ export function Footer({ settings }: FooterProps) {
           {/* Church info */}
           <div className="lg:col-span-2">
             <Image
-              src="/logo.jpg"
+              src="/logo.png"
               alt=""
-              width={72}
+              width={65}
               height={72}
               className="mb-3 rounded-sm object-contain"
             />

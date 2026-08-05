@@ -42,9 +42,9 @@ export function Navbar() {
         {/* Logo / Name */}
         <Link href="/" className="flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md">
           <Image
-            src="/logo.jpg"
+            src="/logo.png"
             alt=""
-            width={44}
+            width={40}
             height={44}
             className="rounded-sm object-contain"
             priority

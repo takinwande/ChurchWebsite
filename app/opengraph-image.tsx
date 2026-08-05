@@ -16,13 +16,14 @@ export default function OpengraphImage() {
           height: '100%',
           padding: '0 90px',
           gap: 70,
-          // Light ground so the crest's own white background blends in. The
-          // logo is rendered unaltered, so the layout adapts to it.
-          background: '#FFFFFF',
+          // The logo is a transparent PNG, so it can sit directly on brand
+          // navy. (It was on white while the source was a JPEG with a baked-in
+          // white ground, which would have shown as a hard box.)
+          background: `linear-gradient(135deg, ${BRAND_NAVY} 0%, #142D55 55%, #0D1E38 100%)`,
         }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={getLogoDataUri()} alt="" width={330} height={330} style={{ flexShrink: 0 }} />
+        <img src={getLogoDataUri()} alt="" width={297} height={330} style={{ flexShrink: 0 }} />
 
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <div
@@ -30,7 +31,7 @@ export default function OpengraphImage() {
               fontSize: 21,
               letterSpacing: 4,
               textTransform: 'uppercase',
-              color: '#64748B',
+              color: 'rgba(255,255,255,0.62)',
             }}
           >
             The Redeemed Christian Church of God
@@ -41,7 +42,7 @@ export default function OpengraphImage() {
               fontSize: 70,
               fontWeight: 700,
               lineHeight: 1.05,
-              color: BRAND_NAVY,
+              color: '#FFFFFF',
               marginTop: 16,
             }}
           >
@@ -54,13 +55,13 @@ export default function OpengraphImage() {
               width: 92,
               height: 6,
               borderRadius: 3,
-              background: BRAND_NAVY,
+              background: '#7994C8',
               marginTop: 28,
             }}
           />
 
-          <div style={{ fontSize: 32, color: '#1E293B', marginTop: 28 }}>Avondale, Arizona</div>
-          <div style={{ fontSize: 25, color: '#64748B', marginTop: 10 }}>
+          <div style={{ fontSize: 32, color: 'rgba(255,255,255,0.88)', marginTop: 28 }}>Avondale, Arizona</div>
+          <div style={{ fontSize: 25, color: 'rgba(255,255,255,0.60)', marginTop: 10 }}>
             Sundays · 9:30 AM Sunday School · 10:00 AM Worship
           </div>
         </div>
