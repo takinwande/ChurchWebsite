@@ -31,7 +31,7 @@ describe('Footer', () => {
 
   it('renders the church logo image', () => {
     render(<Footer settings={null} />)
-    const img = document.querySelector('img[src="/logo.jpg"]')
+    const img = document.querySelector('img[src="/logo.png"]')
     expect(img).toBeInTheDocument()
   })
 

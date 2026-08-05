@@ -15,8 +15,8 @@ let cachedLogo: string | null = null
  */
 export function getLogoDataUri(): string {
   if (!cachedLogo) {
-    const bytes = readFileSync(join(process.cwd(), 'public', 'logo.jpg'))
-    cachedLogo = `data:image/jpeg;base64,${bytes.toString('base64')}`
+    const bytes = readFileSync(join(process.cwd(), 'public', 'logo.png'))
+    cachedLogo = `data:image/png;base64,${bytes.toString('base64')}`
   }
   return cachedLogo
 }
