@@ -25,18 +25,22 @@ export function EventCard({ event, isPast = false }: EventCardProps) {
   return (
     <Card className={`flex flex-col h-full transition-shadow hover:shadow-md ${isPast ? 'opacity-70' : ''}`}>
       <CardContent className="flex flex-col flex-1 p-5">
-        {event.featured && (
-          <Badge className="mb-2 self-start">Featured</Badge>
-        )}
-        {isPast && (
-          <Badge variant="secondary" className="mb-2 self-start">Past Event</Badge>
-        )}
-
-        <div className="mb-2 flex items-center gap-2 text-primary">
+        {/* Badges share the date row rather than stacking above it. Sitting in
+            the flow, they pushed the date and title down on badged cards only,
+            so neighbouring cards in the same row started at different heights. */}
+        {/* Fixed height: a Badge is taller than the date text, so without it the
+            row grows and nudges everything below out of line with sibling cards. */}
+        <div className="mb-2 flex h-6 items-center gap-2 text-primary">
           <CalendarDays className="h-4 w-4 shrink-0" aria-hidden="true" />
           <span className="text-xs font-semibold uppercase tracking-wide">
             {formatShortDate(event.startDateTime)}
           </span>
+          {(event.featured || isPast) && (
+            <div className="ml-auto flex shrink-0 items-center gap-1.5">
+              {event.featured && <Badge>Featured</Badge>}
+              {isPast && <Badge variant="secondary">Past Event</Badge>}
+            </div>
+          )}
         </div>
 
         <Link href={`/events/${event.slug.current}`} className="group">
