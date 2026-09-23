@@ -18,8 +18,8 @@ these may have been done since.
 | `NEXT_PUBLIC_SANITY_API_VERSION` | ✅ | — |
 | `NEXT_PUBLIC_SITE_URL` | ✅ Fixed 2026-09-22 | Points at the correct `.vercel.app` host for now — **must change again** when `covenantassembly.org` is bound (§2) |
 | `SANITY_API_WRITE_TOKEN` | ✅ Production only | Add to Preview/Development too if you use PR previews |
-| `RESEND_API_KEY` | ❌ | Required for notification emails |
-| `RESEND_FROM_EMAIL` | ❌ | Required for emails to actually arrive (§3) |
+| `RESEND_API_KEY` | ✅ Production only, 2026-09-23 | Confirmed working — church tested a live submission and received it |
+| `RESEND_FROM_EMAIL` | ❌ | Sender is still `onboarding@resend.dev`; only reaches the Resend account's own address until a domain is verified (§3) |
 
 Local `.env.local` is *not* carried over — each var must be added to Vercel
 separately, per environment. Redeploy after changing any of them; they're baked
@@ -55,16 +55,16 @@ in at build time, not read at request time.
         -d '{"mutations":[],"dryRun":true}' \
         "https://<projectId>.api.sanity.io/v2024-01-01/data/mutate/production"
       ```
-- [ ] **`RESEND_API_KEY`** — reuse the existing send-only restricted key.
-      Without it, submissions still save to Sanity but nobody is emailed —
-      `new Resend(undefined)` throws, the routes catch it, log
-      `Submission saved but email notification FAILED`, and still return
-      success to the visitor. That's the intended degradation, not a crash.
-
-```bash
-vercel env add RESEND_API_KEY production
-vercel env ls          # confirm
-```
+- [x] ~~`RESEND_API_KEY`~~ — **added and confirmed working, 2026-09-23.**
+      Added to Vercel Production from the existing send-only restricted key,
+      redeployed, then verified end-to-end with a real submission — the church
+      confirms the notification email arrived. Sent from `onboarding@resend.dev`
+      (Resend's shared sender), which only reaches the Resend account's own
+      registered address — that happens to be Site Settings → Notification
+      Email's current value (`takinwande@gmail.com`), which is why it worked
+      without a verified domain. **This stops working the moment Notification
+      Email is changed to anything else** — a verified domain (§3) is required
+      before the church's real monitored inbox can receive these.
 
 ---
 
