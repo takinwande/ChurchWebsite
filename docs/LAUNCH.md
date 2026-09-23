@@ -124,9 +124,10 @@ and the failure is logged, but no one is notified.
       not an env var so staff can change it without a redeploy.
 - [ ] **Delete the test submissions** under **Contact Submissions** and
       **Prayer Requests** from development testing.
-- [ ] **Site Settings** — confirm church name, address, phone, email, service
-      times and social links are all populated and current. (Verified 2026-09-21:
-      these are.)
+- [x] **Site Settings** — church name, address, phone, email, service times and
+      social links are populated and current. (Verified 2026-09-21; address
+      updated 2026-09-23 to 1435 N Central Avenue — [#36](https://github.com/takinwande/ChurchWebsite/pull/36), live in
+      Sanity, code-side fallback fix pending merge.)
 - [ ] **Announcement Banner** — currently disabled with placeholder text
       (`<blank announcement>`). Fine as-is if there's nothing to announce; set a
       real message and enable it otherwise.
@@ -179,15 +180,14 @@ edit, not code — no PR attached to any of these.
 
 ### Wrong — fix before launch
 
-- [ ] **Two names for the same youth ministry.** The Ministries page lists
-      **"The Chosen Vessels"**; the church's own August calendar (and the event
-      seeded from it) says **"The Covenant Vessels (YAYA)"**. Both now appear on
-      the live site. The calendar looks authoritative here — check which name is
-      actually current and fix the other.
-- [ ] **Two titles for Pastor Timothy.** His speaker record says **"Parish
-      Pastor"**; the About page leadership section says **"Lead Pastor"**. The
-      speaker title isn't visible yet only because there are no sermons — it
-      will appear the moment one is added.
+- [x] ~~Two names for the same youth ministry~~ — **fixed** ([#34](https://github.com/takinwande/ChurchWebsite/pull/34)).
+      Confirmed correct name: **"The Chosen Vessels"** (YAYA = Young Adults and
+      Youth Affairs). The calendar event was renamed to match; live in Sanity
+      now, code fix (the seed script that originally created it) pending
+      merge.
+- [x] ~~Two titles for Pastor Timothy~~ — **fixed** ([#34](https://github.com/takinwande/ChurchWebsite/pull/34)).
+      Confirmed correct title: **"Parish Pastor"**. About page updated to
+      match; live in Sanity now.
 - [ ] **"There is no dress code" is live, unreviewed.** The Plan a Visit page
       has no content in Sanity at all, so `app/(site)/plan-a-visit/page.tsx`
       falls back to placeholder copy written directly in code, including that
@@ -197,17 +197,14 @@ edit, not code — no PR attached to any of these.
 
 ### Empty on day one
 
-- [ ] **No sermons at all.** The one that existed ("Brand New Beginning",
-      Aug 2026) was deleted outright, not unpublished — confirm that was
-      intentional. Until a sermon is added, `/sermons` is empty and the
-      homepage's "Latest Message" section doesn't render
-      (`if (!sermon) return null`).
-- [ ] **No upcoming or recent events.** The August 2026 calendar is the most
-      recent content; every event in it is now outside the 10-day past window.
-      `/events` will show "No upcoming events" and the homepage's events section
-      won't render. Seed September/October the same way as August
-      (`scripts/seed-events-august-2026.mjs` as a template) before or right
-      after launch.
+- [x] ~~No sermons at all~~ — **staying that way, deliberately (2026-09-23).**
+      Confirmed: leave `/sermons` empty and the homepage's "Latest Message"
+      section hidden (`if (!sermon) return null`) for now. Not a launch blocker
+      — revisit whenever there's a sermon to add, no action needed before then.
+- [x] ~~No upcoming or recent events~~ — **fixed** ([#35](https://github.com/takinwande/ChurchWebsite/pull/35)).
+      September 23 – October 2026 seeded; 20 events live, homepage's events
+      section rendering again. Will need the same treatment for November once
+      that calendar's available.
 
 ### Only the church can verify
 
