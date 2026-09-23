@@ -16,7 +16,7 @@ these may have been done since.
 | `NEXT_PUBLIC_SANITY_PROJECT_ID` | ✅ | — |
 | `NEXT_PUBLIC_SANITY_DATASET` | ✅ | — |
 | `NEXT_PUBLIC_SANITY_API_VERSION` | ✅ | — |
-| `NEXT_PUBLIC_SITE_URL` | ⚠️ **wrong**, not just placeholder | **Fix — see below** |
+| `NEXT_PUBLIC_SITE_URL` | ✅ Fixed 2026-09-22 | Points at the correct `.vercel.app` host for now — **must change again** when `covenantassembly.org` is bound (§2) |
 | `SANITY_API_WRITE_TOKEN` | ✅ Production only | Add to Preview/Development too if you use PR previews |
 | `RESEND_API_KEY` | ❌ | Required for notification emails |
 | `RESEND_FROM_EMAIL` | ❌ | Required for emails to actually arrive (§3) |
@@ -25,15 +25,20 @@ Local `.env.local` is *not* carried over — each var must be added to Vercel
 separately, per environment. Redeploy after changing any of them; they're baked
 in at build time, not read at request time.
 
-- [ ] **`NEXT_PUBLIC_SITE_URL` is actively wrong in production**, not just a
-      placeholder. It's set to `rccgcovenantassembly.vercel.app` (no hyphens) —
-      that host 404s. The real deployment is at
-      `rccg-covenant-assembly.vercel.app`. Because this value feeds `sitemap.xml`,
-      `robots.txt`, and every `og:image` URL, **link previews are broken right
-      now**: sharing the site to Facebook or iMessage shows no picture, since the
-      image URL points at a host that doesn't exist. Set this to the real church
-      domain when it's ready, or to the correct `.vercel.app` host in the
-      meantime, and redeploy.
+- [x] ~~`NEXT_PUBLIC_SITE_URL` actively wrong in production~~ — **fixed
+      2026-09-22.** It was set to `rccgcovenantassembly.vercel.app` (no
+      hyphens), which 404s; the real deployment is
+      `rccg-covenant-assembly.vercel.app`. Since this value feeds `sitemap.xml`,
+      `robots.txt`, and every `og:image` URL, link previews showed no picture —
+      the image URL pointed at a host that didn't exist. Corrected to the real
+      `.vercel.app` host and redeployed; verified live: `/opengraph-image`
+      returns 200, and `sitemap.xml` lists the correct host throughout.
+
+      `covenantassembly.org` is registered but **not yet bound** to this
+      project — that's a deliberate launch-day step, not an oversight. **This
+      variable has to be set again**, to the real domain, once binding happens
+      (§2), or the same class of bug returns with a domain that doesn't
+      resolve.
 - [ ] **`SANITY_API_WRITE_TOKEN`** — confirmed present and working in
       Production (seeded the August 2026 calendar through it). Still absent from
       Preview and Development, so a PR preview deploy will 500 on form
@@ -57,7 +62,6 @@ in at build time, not read at request time.
       success to the visitor. That's the intended degradation, not a crash.
 
 ```bash
-vercel env add NEXT_PUBLIC_SITE_URL production --force   # overwrite the wrong value
 vercel env add RESEND_API_KEY production
 vercel env ls          # confirm
 ```
@@ -66,10 +70,17 @@ vercel env ls          # confirm
 
 ## 2. Domain and DNS
 
+`covenantassembly.org` is already registered (Vercel account, ~207 days) but
+**not yet bound to this project** — that's the actual go-live switch, saved
+for launch day on purpose rather than left undone.
+
 - [ ] Add the domain in Vercel → Project → Settings → Domains
 - [ ] Point nameservers / A / CNAME records as Vercel instructs
 - [ ] Confirm SSL certificate issues successfully
 - [ ] Decide whether `www` redirects to apex or vice versa, and set it
+- [ ] **Update `NEXT_PUBLIC_SITE_URL` to `https://covenantassembly.org` and
+      redeploy** (§1) — it currently points at the `.vercel.app` host, which is
+      correct only until this step happens
 
 ---
 
