@@ -228,7 +228,7 @@ async function main() {
         name: 'RCCG Covenant Assembly',
         tagline: 'Covenant: Key to God\'s Word and God\'s Ways',
         address: {
-          street: '755 North 114th Avenue',
+          street: '1435 N Central Avenue',
           city: 'Avondale',
           state: 'AZ',
           zip: '85323',

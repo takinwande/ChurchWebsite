@@ -1,7 +1,7 @@
 # RCCG Covenant Assembly — Website
 
 **The Redeemed Christian Church of God Covenant Assembly**
-755 North 114th Avenue, Avondale, AZ 85323
+1435 N Central Avenue, Avondale, AZ 85323
 [admin@covenantassembly.org](mailto:admin@covenantassembly.org)
 
 ---
@@ -77,7 +77,7 @@ In Sanity Studio, add the following to get started:
 **Site Settings** (required — controls navbar, footer, and homepage)
 - Church Name: `The Redeemed Christian Church of God Covenant Assembly`
 - Tagline: e.g. `A place of worship, community, and growth`
-- Address: `755 North 114th Avenue`, `Avondale`, `AZ`, `85323`
+- Address: `1435 N Central Avenue`, `Avondale`, `AZ`, `85323`
 - Phone: `623-419-5650`
 - Email: `admin@covenantassembly.org`
 - Add at least one Service Time (e.g. "Sunday Service" / Sunday / 10:00 AM)
