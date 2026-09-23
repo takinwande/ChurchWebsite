@@ -11,40 +11,43 @@ these may have been done since.
 
 ## 1. Environment variables
 
-Vercel currently has **only the four `NEXT_PUBLIC_*` variables**. The three
-server-only ones are absent from every environment, which is why the contact and
-prayer forms return 500 on the deployed preview.
-
-Local `.env.local` is *not* carried over. Each must be added to Vercel
-separately, per environment.
-
 | Variable | In Vercel? | Action |
 |---|---|---|
 | `NEXT_PUBLIC_SANITY_PROJECT_ID` | ✅ | — |
 | `NEXT_PUBLIC_SANITY_DATASET` | ✅ | — |
 | `NEXT_PUBLIC_SANITY_API_VERSION` | ✅ | — |
-| `NEXT_PUBLIC_SITE_URL` | ⚠️ set to placeholder | **Change to the real domain** |
-| `SANITY_API_WRITE_TOKEN` | ❌ | **Required — forms 500 without it** |
+| `NEXT_PUBLIC_SITE_URL` | ✅ Fixed 2026-09-22 | Points at the correct `.vercel.app` host for now — **must change again** when `covenantassembly.org` is bound (§2) |
+| `SANITY_API_WRITE_TOKEN` | ✅ Production only | Add to Preview/Development too if you use PR previews |
 | `RESEND_API_KEY` | ❌ | Required for notification emails |
 | `RESEND_FROM_EMAIL` | ❌ | Required for emails to actually arrive (§3) |
 
-- [ ] **`NEXT_PUBLIC_SITE_URL`** — currently the literal string
-      `https://your-domain.com`, locally and in Vercel. It feeds `sitemap.xml`,
-      `robots.txt` and OpenGraph tags, so shipping as-is publishes
-      `your-domain.com` URLs to crawlers.
-- [ ] **`SANITY_API_WRITE_TOKEN`** — must have **Editor** permission, not just
-      read. Create at [sanity.io/manage](https://sanity.io/manage) → API →
-      Tokens → Add API token. Shown once; copy immediately.
+Local `.env.local` is *not* carried over — each var must be added to Vercel
+separately, per environment. Redeploy after changing any of them; they're baked
+in at build time, not read at request time.
 
-      ⚠️ **Verify the token before trusting it.** A read-only token
-      authenticates and queries perfectly well, and fails only at the moment it
-      tries to write — so it looks correct right up until a visitor submits a
-      form. `.env.local` previously held exactly such a token: reads succeeded,
-      writes were rejected with *"Insufficient permissions; permission 'create'
-      required"*. Both form routes persist to Sanity before emailing, so an
-      under-privileged token means every submission returns 500.
+- [x] ~~`NEXT_PUBLIC_SITE_URL` actively wrong in production~~ — **fixed
+      2026-09-22.** It was set to `rccgcovenantassembly.vercel.app` (no
+      hyphens), which 404s; the real deployment is
+      `rccg-covenant-assembly.vercel.app`. Since this value feeds `sitemap.xml`,
+      `robots.txt`, and every `og:image` URL, link previews showed no picture —
+      the image URL pointed at a host that didn't exist. Corrected to the real
+      `.vercel.app` host and redeployed; verified live: `/opengraph-image`
+      returns 200, and `sitemap.xml` lists the correct host throughout.
 
-      This check writes nothing and prints an error if the token can't create:
+      `covenantassembly.org` is registered but **not yet bound** to this
+      project — that's a deliberate launch-day step, not an oversight. **This
+      variable has to be set again**, to the real domain, once binding happens
+      (§2), or the same class of bug returns with a domain that doesn't
+      resolve.
+- [ ] **`SANITY_API_WRITE_TOKEN`** — confirmed present and working in
+      Production (seeded the August 2026 calendar through it). Still absent from
+      Preview and Development, so a PR preview deploy will 500 on form
+      submission. Add it there too if previews get used.
+
+      Whenever a new token is issued, verify it can actually write before
+      trusting it — a read-only token authenticates and queries fine and only
+      fails at the moment it tries to write, so it looks correct right up until
+      a visitor submits a form:
 
       ```bash
       curl -s -X POST -H "Authorization: Bearer $TOKEN" \
@@ -52,16 +55,13 @@ separately, per environment.
         -d '{"mutations":[],"dryRun":true}' \
         "https://<projectId>.api.sanity.io/v2024-01-01/data/mutate/production"
       ```
-
-      The local token has since been replaced with a working Editor token —
-      confirmed by seeding the August 2026 calendar. **The same one still needs
-      adding to Vercel**, where no write token exists yet.
 - [ ] **`RESEND_API_KEY`** — reuse the existing send-only restricted key.
-- [ ] Add each to **Production, Preview and Development**.
-- [ ] Redeploy — env vars only apply to *new* deployments.
+      Without it, submissions still save to Sanity but nobody is emailed —
+      `new Resend(undefined)` throws, the routes catch it, log
+      `Submission saved but email notification FAILED`, and still return
+      success to the visitor. That's the intended degradation, not a crash.
 
 ```bash
-vercel env add SANITY_API_WRITE_TOKEN production
 vercel env add RESEND_API_KEY production
 vercel env ls          # confirm
 ```
@@ -70,10 +70,17 @@ vercel env ls          # confirm
 
 ## 2. Domain and DNS
 
+`covenantassembly.org` is already registered (Vercel account, ~207 days) but
+**not yet bound to this project** — that's the actual go-live switch, saved
+for launch day on purpose rather than left undone.
+
 - [ ] Add the domain in Vercel → Project → Settings → Domains
 - [ ] Point nameservers / A / CNAME records as Vercel instructs
 - [ ] Confirm SSL certificate issues successfully
 - [ ] Decide whether `www` redirects to apex or vice versa, and set it
+- [ ] **Update `NEXT_PUBLIC_SITE_URL` to `https://covenantassembly.org` and
+      redeploy** (§1) — it currently points at the `.vercel.app` host, which is
+      correct only until this step happens
 
 ---
 
@@ -111,15 +118,24 @@ and the failure is logged, but no one is notified.
       CORS Origins → add the production domain **with credentials allowed**.
       Studio is embedded at `/studio` on your own domain, so it will fail to
       load without this.
-- [ ] **Site Settings → Notification Email** — change from the development
-      address to the address the church actually monitors. This is the recipient
-      for both forms, and it is deliberately *not* an env var so staff can change
-      it without a redeploy.
-- [ ] **Site Settings** — confirm church name, address, phone, email, service
-      times and social links are all populated and current.
-- [ ] **Announcement Banner** — set to the intended state (enabled/disabled).
-- [ ] **Program Fliers** — check `expiresAt` dates; expired fliers vanish from
-      the homepage automatically.
+- [ ] **Site Settings → Notification Email** is currently `takinwande@gmail.com`
+      — a developer's personal address from testing. Change it to the inbox the
+      church actually monitors. It's the recipient for both forms, deliberately
+      not an env var so staff can change it without a redeploy.
+- [ ] **Delete the test submissions** under **Contact Submissions** and
+      **Prayer Requests** from development testing.
+- [x] **Site Settings** — church name, address, phone, email, service times and
+      social links are populated and current. (Verified 2026-09-21; address
+      updated 2026-09-23 to 1435 N Central Avenue — [#36](https://github.com/takinwande/ChurchWebsite/pull/36), live in
+      Sanity, code-side fallback fix pending merge.)
+- [ ] **Announcement Banner** — currently disabled with placeholder text
+      (`<blank announcement>`). Fine as-is if there's nothing to announce; set a
+      real message and enable it otherwise.
+- [ ] **Program Fliers** — all 3 have expired; that section is hidden on the
+      homepage. Add current ones if there's anything to promote.
+
+See §8 for content that needs a human read before launch, not just a settings
+check.
 
 ---
 
@@ -127,16 +143,9 @@ and the failure is logged, but no one is notified.
 
 Not blockers, but each is visible to visitors or search engines.
 
-- [ ] **Favicon** — none exists. `public/` contains only `logo.jpg`, and there
-      is no `app/icon.*`. Browsers will show a blank tab icon.
-- [ ] **OpenGraph image** — none exists. `app/layout.tsx` declares
-      `twitter: { card: 'summary_large_image' }` but no image is provided, so
-      links shared on Facebook — where this church has an active presence — will
-      render as a bare box with no picture. This is the highest-visibility item
-      in this section.
-- [ ] **`/ministries` missing from `sitemap.ts`** — the page is live and linked
-      from both the nav and the About page, but is absent from the sitemap.
-- [ ] **Structured data (JSON-LD)** — none on the site. `Church` /
+- [x] ~~Favicon~~ / ~~OpenGraph image~~ — done ([#26](https://github.com/takinwande/ChurchWebsite/pull/26), [#30](https://github.com/takinwande/ChurchWebsite/pull/30)). One follow-up: the OG card has the Sunday service times (`9:30 AM Sunday School · 10:00 AM Worship`) written directly into `app/opengraph-image.tsx` rather than read from Site Settings. Matches today's schedule but won't update if it changes — worth wiring to `SITE_SETTINGS_QUERY` at some point.
+- [x] ~~`/ministries` missing from `sitemap.ts`~~ — done ([#31](https://github.com/takinwande/ChurchWebsite/pull/31)), and the same page was also missing from the footer's Quick Links, fixed in the same PR.
+- [ ] **Structured data (JSON-LD)** — still none on the site. `Church` /
       `LocalBusiness` markup carrying address, geo, phone and service times is
       the single highest-ROI SEO addition for a local congregation, and feeds
       Google's knowledge panel and Maps. `Event` and `VideoObject` markup for
@@ -153,7 +162,10 @@ Not blockers, but each is visible to visitors or search engines.
       `Submission saved but email notification FAILED` with the specific Resend
       error, which names the cause
 - [ ] `/studio` loads and content can be edited
-- [ ] `https://<domain>/sitemap.xml` shows real URLs, not `your-domain.com`
+- [ ] `https://<domain>/sitemap.xml` shows the real domain in every URL, not a
+      dead or placeholder host (see §1 — this failed silently for a while)
+- [ ] Share the homepage link somewhere (a text to yourself is enough) and
+      confirm a preview image actually shows up
 - [ ] `https://<domain>/robots.txt` resolves and disallows `/studio/`
 - [ ] Dark mode toggle works; reload in dark mode shows no white flash
 - [ ] Mobile nav opens, and tapping several links in a row navigates every time
@@ -161,10 +173,71 @@ Not blockers, but each is visible to visitors or search engines.
 
 ---
 
-## 7. Known outstanding work
+## 8. Content audit (2026-09-21)
+
+Pulled directly from the production dataset. Everything below needs a Studio
+edit, not code — no PR attached to any of these.
+
+### Wrong — fix before launch
+
+- [x] ~~Two names for the same youth ministry~~ — **fixed** ([#34](https://github.com/takinwande/ChurchWebsite/pull/34)).
+      Confirmed correct name: **"The Chosen Vessels"** (YAYA = Young Adults and
+      Youth Affairs). The calendar event was renamed to match; live in Sanity
+      now, code fix (the seed script that originally created it) pending
+      merge.
+- [x] ~~Two titles for Pastor Timothy~~ — **fixed** ([#34](https://github.com/takinwande/ChurchWebsite/pull/34)).
+      Confirmed correct title: **"Parish Pastor"**. About page updated to
+      match; live in Sanity now.
+- [ ] **"There is no dress code" is live, unreviewed.** The Plan a Visit page
+      has no content in Sanity at all, so `app/(site)/plan-a-visit/page.tsx`
+      falls back to placeholder copy written directly in code, including that
+      specific claim. Confirm it reflects the church's actual practice, or fill
+      in the page in Studio so the real content overrides the fallback.
+- [ ] **Notification Email and test submissions** — see §4.
+
+### Empty on day one
+
+- [x] ~~No sermons at all~~ — **staying that way, deliberately (2026-09-23).**
+      Confirmed: leave `/sermons` empty and the homepage's "Latest Message"
+      section hidden (`if (!sermon) return null`) for now. Not a launch blocker
+      — revisit whenever there's a sermon to add, no action needed before then.
+- [x] ~~No upcoming or recent events~~ — **fixed** ([#35](https://github.com/takinwande/ChurchWebsite/pull/35)).
+      September 23 – October 2026 seeded; 20 events live, homepage's events
+      section rendering again. Will need the same treatment for November once
+      that calendar's available.
+
+### Only the church can verify
+
+- [ ] **Give page payment details are hardcoded**, not stored in Sanity:
+      Zelle/PayPal to `admin@covenantassembly.org`, Cash App `$RCCGCAAZ`, and the
+      Givelify link in `app/(site)/give/page.tsx`. Money moves through these —
+      whoever handles church finances should confirm each one before launch.
+- [ ] **`siteSettings.givingUrl` is set to a GoFundMe building-fund link**, but
+      no page on the site reads or displays that field — it's invisible to
+      visitors. Either wire it into the Give page, or clear it so no one assumes
+      it's live somewhere it isn't.
+- [ ] **AI-drafted prose deserves a read, not just a settings check.** The
+      mission, vision, belief statements, and all 8 ministry descriptions came
+      from a seed script authored with an AI assistant
+      (`scripts/seed-church-content.mjs`). Someone has clearly edited parts of
+      it already (a later commit fixed a capitalization issue), but the
+      specific factual claims haven't been independently verified end to end.
+      One example worth a second look: Outreach's description says the church
+      provides "medical services" — the food outreach and backpack giveaway are
+      backed by real events and photos, but nothing else in the dataset
+      corroborates a medical services claim.
+
+### Already checked and fine
+
+Hero carousel and gallery album are real church photos (the earlier
+`seed-test-images.mjs` stock-photo placeholders are gone). Site Settings —
+address, phone, service times, and all four social links — match reality.
+
+---
+
+## 9. Known outstanding work
 
 | Item | State |
 |---|---|
 | [#22](https://github.com/takinwande/ChurchWebsite/pull/22) Vercel Speed Insights | Open — opt-in decision. Needs enabling in the Vercel dashboard to report anything |
-| [#23](https://github.com/takinwande/ChurchWebsite/pull/23) `.env.example` server vars | Open — docs only |
 | `feature/pastors-desk` | **Do not merge as-is.** Reads as a finished feature, but `pastorsDesk` is never added to the Studio sidebar in `sanity/sanity.config.ts`, so editors cannot create a post. Also ships no tests. Nothing fails at build or test time to warn you |
