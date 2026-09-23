@@ -118,7 +118,7 @@ const events = [
   // Mon Aug 24 — week-long, ending the following Sunday. Matches the existing
   // multi-day pattern used for "Royal Priesthood (Men's) Week".
   {
-    title: 'The Covenant Vessels (YAYA) Week',
+    title: 'The Chosen Vessels (YAYA) Week',
     start: t('2026-08-24', '00:00:00'),
     end: t('2026-08-30', '00:00:00'),
     desc: 'Youth and young adults (YAYA) week, concluding with YAYA Sunday.',
