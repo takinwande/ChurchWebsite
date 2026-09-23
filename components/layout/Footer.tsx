@@ -47,7 +47,7 @@ export function Footer({ settings }: FooterProps) {
     ? [address.street, address.city && address.state ? `${address.city}, ${address.state} ${address.zip}` : '']
         .filter(Boolean)
         .join('\n')
-    : '755 North 114th Avenue\nAvondale, AZ 85323'
+    : '1435 N Central Avenue\nAvondale, AZ 85323'
 
   const socials = settings?.socialLinks
   const activeSocials = socials

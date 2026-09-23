@@ -27,7 +27,7 @@ export default async function PlanVisitPage() {
   const address = settings?.address
   const addressLine = address
     ? `${address.street}, ${address.city}, ${address.state} ${address.zip}`
-    : '755 North 114th Avenue, Avondale, AZ 85323'
+    : '1435 N Central Avenue, Avondale, AZ 85323'
 
   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(addressLine)}`
 

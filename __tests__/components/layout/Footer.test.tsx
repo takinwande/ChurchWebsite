@@ -43,7 +43,7 @@ describe('Footer', () => {
 
   it('renders the default address when settings is null', () => {
     render(<Footer settings={null} />)
-    expect(screen.getByText(/755 North 114th Avenue/)).toBeInTheDocument()
+    expect(screen.getByText(/1435 N Central Avenue/)).toBeInTheDocument()
     expect(screen.getByText(/Avondale, AZ 85323/)).toBeInTheDocument()
   })
 

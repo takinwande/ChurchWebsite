@@ -25,7 +25,7 @@ export default async function ContactPageRoute() {
   const email = page?.email ?? settings?.email ?? 'admin@covenantassembly.org'
   const address = page?.address ?? (() => {
     const a = settings?.address
-    return a ? `${a.street}\n${a.city}, ${a.state} ${a.zip}` : '755 North 114th Avenue\nAvondale, AZ 85323'
+    return a ? `${a.street}\n${a.city}, ${a.state} ${a.zip}` : '1435 N Central Avenue\nAvondale, AZ 85323'
   })()
 
   return (
