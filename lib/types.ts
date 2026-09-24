@@ -54,6 +54,16 @@ export interface Announcement {
   linkText?: string
 }
 
+export interface FundraisingCampaign {
+  _id: string
+  enabled: boolean
+  eyebrow?: string
+  heading: string
+  body?: string
+  buttonLabel?: string
+  url: string
+}
+
 export interface Speaker {
   _id: string
   name: string

@@ -8,7 +8,7 @@ const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!
 const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET!
 
 // Singleton document IDs
-const singletonTypes = new Set(['siteSettings', 'announcement', 'planVisitPage', 'aboutPage', 'contactPage'])
+const singletonTypes = new Set(['siteSettings', 'announcement', 'fundraisingCampaign', 'planVisitPage', 'aboutPage', 'contactPage'])
 const singletonActions = (input: DocumentActionComponent[]) =>
   input.filter((action) => action.action !== 'delete')
 
@@ -36,6 +36,10 @@ export default defineConfig({
               .title('Announcement Banner')
               .id('announcement')
               .child(S.document().schemaType('announcement').documentId('announcement')),
+            S.listItem()
+              .title('Fundraising Campaign CTA')
+              .id('fundraisingCampaign')
+              .child(S.document().schemaType('fundraisingCampaign').documentId('fundraisingCampaign')),
             S.divider(),
             // Pages
             S.listItem()

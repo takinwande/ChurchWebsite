@@ -1,5 +1,6 @@
 import { siteSettings } from './siteSettings'
 import { announcement } from './announcement'
+import { fundraisingCampaign } from './fundraisingCampaign'
 import { sermon } from './sermon'
 import { sermonSeries } from './sermonSeries'
 import { speaker } from './speaker'
@@ -16,6 +17,7 @@ import { programFlier } from './programFlier'
 export const schemaTypes = [
   siteSettings,
   announcement,
+  fundraisingCampaign,
   sermon,
   sermonSeries,
   speaker,
