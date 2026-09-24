@@ -2,6 +2,7 @@ import { defineConfig, type DocumentActionComponent } from 'sanity'
 import { structureTool } from 'sanity/structure'
 import { visionTool } from '@sanity/vision'
 import { schemaTypes } from './schemaTypes'
+import { BulkDeletePastEvents } from './components/BulkDeletePastEvents'
 
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!
 const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET!
@@ -56,6 +57,21 @@ export default defineConfig({
             S.documentTypeListItem('speaker').title('Speakers'),
             S.divider(),
             S.documentTypeListItem('event').title('Events'),
+            // Same document type as above, filtered to startDateTime < now and
+            // sorted most-recently-past first. This is a read-only browse/edit
+            // view — for actually deleting several at once, use the "Bulk
+            // Delete Events" tool in the top nav instead, which is what
+            // Studio's document lists don't provide on their own.
+            S.listItem()
+              .title('Past Events')
+              .id('pastEvents')
+              .child(
+                S.documentList()
+                  .title('Past Events')
+                  .schemaType('event')
+                  .filter('_type == "event" && startDateTime < now()')
+                  .defaultOrdering([{ field: 'startDateTime', direction: 'desc' }])
+              ),
             S.documentTypeListItem('programFlier').title('Program Fliers'),
             S.documentTypeListItem('ministry').title('Ministries'),
             S.divider(),
@@ -66,6 +82,13 @@ export default defineConfig({
           ]),
     }),
     visionTool(),
+  ],
+  tools: [
+    {
+      name: 'bulk-delete-events',
+      title: 'Bulk Delete Events',
+      component: BulkDeletePastEvents,
+    },
   ],
   document: {
     actions: (input, { schemaType }) =>
