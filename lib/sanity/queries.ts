@@ -19,6 +19,12 @@ export const ANNOUNCEMENT_QUERY = groq`
   }
 `
 
+export const FUNDRAISING_CAMPAIGN_QUERY = groq`
+  *[_type == "fundraisingCampaign"][0]{
+    _id, enabled, eyebrow, heading, body, buttonLabel, url
+  }
+`
+
 export const LATEST_SERMON_QUERY = groq`
   *[_type == "sermon"] | order(date desc)[0]{
     _id, title, slug, date, youtubeUrl, audioUrl,
