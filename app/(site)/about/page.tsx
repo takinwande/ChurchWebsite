@@ -82,17 +82,17 @@ export default async function AboutPage_() {
                     <StaggerItem key={i}>
                       <div className="flex gap-4 items-start">
                         {leader.photo ? (
-                          <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-full border border-border">
+                          <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-full border border-border">
                             <Image
-                              src={urlFor(leader.photo).width(128).height(128).fit('crop').url()}
+                              src={urlFor(leader.photo).width(192).height(192).fit('crop').url()}
                               alt={leader.name}
                               fill
                               className="object-cover"
-                              sizes="64px"
+                              sizes="96px"
                             />
                           </div>
                         ) : (
-                          <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary font-bold text-lg">
+                          <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary font-bold text-2xl">
                             {leader.name.charAt(0)}
                           </div>
                         )}
