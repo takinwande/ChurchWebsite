@@ -5,6 +5,7 @@ import type { SiteSettings, Sermon, Event, ProgramFlier } from '@/lib/types'
 import { getEventWindow } from '@/lib/utils'
 import { Hero } from '@/components/home/Hero'
 import { ServiceTimesSection } from '@/components/home/ServiceTimesSection'
+import { BuildingFundCTA } from '@/components/home/BuildingFundCTA'
 import { LatestSermon } from '@/components/home/LatestSermon'
 import { UpcomingEvents } from '@/components/home/UpcomingEvents'
 import { FliersSection } from '@/components/home/FliersSection'
@@ -44,6 +45,7 @@ export default async function HomePage() {
         heroImages={settings?.heroImages}
       />
       <ServiceTimesSection serviceTimes={serviceTimes} />
+      <BuildingFundCTA />
       <FliersSection fliers={activeFliers ?? []} />
       <LatestSermon sermon={latestSermon} />
       <UpcomingEvents events={upcomingEvents ?? []} />
