@@ -4,12 +4,13 @@
 import { POST } from '@/app/api/contact/route'
 import { __resetRateLimit } from '@/lib/rate-limit'
 
+const mockFetch = jest.fn().mockResolvedValue({ notificationEmail: 'test@example.com' })
 const mockCreate = jest.fn().mockResolvedValue({ _id: 'doc-1' })
 const mockSend = jest.fn().mockResolvedValue({ data: { id: 'test-id' }, error: null })
 
 jest.mock('@sanity/client', () => ({
   createClient: () => ({
-    fetch: jest.fn().mockResolvedValue({ notificationEmail: 'test@example.com' }),
+    fetch: (...args: unknown[]) => mockFetch(...args),
     create: (...args: unknown[]) => mockCreate(...args),
   }),
 }))
@@ -49,6 +50,7 @@ describe('POST /api/contact', () => {
 
   beforeEach(() => {
     __resetRateLimit()
+    mockFetch.mockClear().mockResolvedValue({ notificationEmail: 'test@example.com' })
     mockCreate.mockClear().mockResolvedValue({ _id: 'doc-1' })
     mockSend.mockClear().mockResolvedValue({ data: { id: 'test-id' }, error: null })
   })
@@ -123,10 +125,18 @@ describe('POST /api/contact', () => {
       await POST(makeRequest(VALID))
       expect(mockSend).toHaveBeenCalledWith(
         expect.objectContaining({
-          to: 'test@example.com',
+          to: ['test@example.com'],
           replyTo: 'john@example.com',
           subject: '[Contact] Hello',
         })
+      )
+    })
+
+    it('notifies every address when Notification Email has more than one, comma-separated', async () => {
+      mockFetch.mockResolvedValue({ notificationEmail: 'a@example.com, b@example.com' })
+      await POST(makeRequest(VALID))
+      expect(mockSend).toHaveBeenCalledWith(
+        expect.objectContaining({ to: ['a@example.com', 'b@example.com'] })
       )
     })
   })

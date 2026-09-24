@@ -71,7 +71,7 @@ export async function POST(req: Request) {
       // The submission is safely stored, so this is not fatal for the sender —
       // but the notification pipeline is broken and needs attention.
       console.error(
-        `[Contact form] Submission saved but email notification FAILED to ${notificationEmail}: ${error}`
+        `[Contact form] Submission saved but email notification FAILED to ${notificationEmail.join(', ')}: ${error}`
       )
     }
 
