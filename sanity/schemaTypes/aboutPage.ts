@@ -38,7 +38,14 @@ export const aboutPage = defineType({
           fields: [
             defineField({ name: 'name', type: 'string', title: 'Name' }),
             defineField({ name: 'title', type: 'string', title: 'Title / Role' }),
-            defineField({ name: 'photo', type: 'image', title: 'Photo', options: { hotspot: true } }),
+            defineField({
+              name: 'photo',
+              type: 'image',
+              title: 'Photo',
+              description:
+                'After uploading, click the image and drag the circular marker onto their face — this keeps them properly framed in the round avatar shown on the site, no matter the original photo\'s shape.',
+              options: { hotspot: true },
+            }),
             defineField({ name: 'bio', type: 'text', title: 'Short Bio', rows: 3 }),
           ],
           preview: {
