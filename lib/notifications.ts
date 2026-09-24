@@ -13,6 +13,8 @@ const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev'
 
 const apiVersion = process.env.NEXT_PUBLIC_SANITY_API_VERSION ?? '2024-01-01'
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
 /** Read-only client for pulling settings inside API routes (never cached). */
 export function getReadClient(): SanityClient {
   return createClient({
@@ -34,15 +36,41 @@ export function getWriteClient(): SanityClient {
   })
 }
 
-/** Recipient for form notifications, configurable in Sanity Site Settings. */
-export async function getNotificationEmail(): Promise<string> {
+/**
+ * Recipients for form notifications, configurable in Sanity Site Settings.
+ *
+ * The field stays a plain single-line string in Studio rather than switching
+ * to an array field — editors just comma-separate multiple addresses in the
+ * same text box they already know, instead of learning an "add item" control
+ * for something that used to be one value. This is where that string gets
+ * split, trimmed, and filtered down to addresses that are actually usable.
+ *
+ * Always returns at least one address: a malformed or blank field falls back
+ * to FALLBACK_EMAIL rather than sending nowhere.
+ */
+export async function getNotificationEmail(): Promise<string[]> {
   try {
     const settings = await getReadClient().fetch<{ notificationEmail?: string }>(
       `*[_type == "siteSettings"][0]{ notificationEmail }`
     )
-    return settings?.notificationEmail?.trim() || FALLBACK_EMAIL
+    const raw = settings?.notificationEmail?.trim()
+    if (!raw) return [FALLBACK_EMAIL]
+
+    const candidates = raw.split(',').map((a) => a.trim()).filter(Boolean)
+    const valid = candidates.filter((a) => EMAIL_RE.test(a))
+    const invalid = candidates.filter((a) => !EMAIL_RE.test(a))
+
+    if (invalid.length > 0) {
+      // A single admin typo shouldn't silently swallow every other recipient
+      // or crash the send — drop it and say so, so it gets noticed and fixed.
+      console.warn(
+        `[notifications] Ignoring malformed entries in Notification Email: ${invalid.join(', ')}`
+      )
+    }
+
+    return valid.length > 0 ? valid : [FALLBACK_EMAIL]
   } catch {
-    return FALLBACK_EMAIL
+    return [FALLBACK_EMAIL]
   }
 }
 
@@ -59,7 +87,7 @@ export interface SendResult {
  * rejected send is indistinguishable from a delivered one.
  */
 export async function sendNotificationEmail(options: {
-  to: string
+  to: string | string[]
   subject: string
   text: string
   replyTo?: string

@@ -71,7 +71,7 @@ export async function POST(req: Request) {
       // The request is safely stored, so this is not fatal for the sender —
       // but the notification pipeline is broken and needs attention.
       console.error(
-        `[Prayer request] Request saved but email notification FAILED to ${notificationEmail}: ${error}`
+        `[Prayer request] Request saved but email notification FAILED to ${notificationEmail.join(', ')}: ${error}`
       )
     }
 

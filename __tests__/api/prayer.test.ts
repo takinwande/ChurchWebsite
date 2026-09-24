@@ -4,12 +4,13 @@
 import { POST } from '@/app/api/prayer/route'
 import { __resetRateLimit } from '@/lib/rate-limit'
 
+const mockFetch = jest.fn().mockResolvedValue({ notificationEmail: 'prayer@example.com' })
 const mockCreate = jest.fn().mockResolvedValue({ _id: 'doc-1' })
 const mockSend = jest.fn().mockResolvedValue({ data: { id: 'test-id' }, error: null })
 
 jest.mock('@sanity/client', () => ({
   createClient: () => ({
-    fetch: jest.fn().mockResolvedValue({ notificationEmail: 'prayer@example.com' }),
+    fetch: (...args: unknown[]) => mockFetch(...args),
     create: (...args: unknown[]) => mockCreate(...args),
   }),
 }))
@@ -48,6 +49,7 @@ describe('POST /api/prayer', () => {
 
   beforeEach(() => {
     __resetRateLimit()
+    mockFetch.mockClear().mockResolvedValue({ notificationEmail: 'prayer@example.com' })
     mockCreate.mockClear().mockResolvedValue({ _id: 'doc-1' })
     mockSend.mockClear().mockResolvedValue({ data: { id: 'test-id' }, error: null })
   })
@@ -108,9 +110,17 @@ describe('POST /api/prayer', () => {
       await POST(makeRequest(VALID))
       expect(mockSend).toHaveBeenCalledWith(
         expect.objectContaining({
-          to: 'prayer@example.com',
+          to: ['prayer@example.com'],
           subject: '[Prayer Request] New request from Jane Doe',
         })
+      )
+    })
+
+    it('notifies every address when Notification Email has more than one, comma-separated', async () => {
+      mockFetch.mockResolvedValue({ notificationEmail: 'a@example.com,b@example.com' })
+      await POST(makeRequest(VALID))
+      expect(mockSend).toHaveBeenCalledWith(
+        expect.objectContaining({ to: ['a@example.com', 'b@example.com'] })
       )
     })
   })

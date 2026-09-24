@@ -73,7 +73,8 @@ export const siteSettings = defineType({
       name: 'notificationEmail',
       title: 'Notification Email',
       type: 'string',
-      description: 'Email address that receives contact and prayer request submissions. Update here — no deployment needed.',
+      description:
+        'Email address that receives contact and prayer request submissions. Update here — no deployment needed. To notify more than one person, separate addresses with commas, e.g. "admin@covenantassembly.org, pastor@covenantassembly.org".',
     }),
   ],
   preview: { select: { title: 'name' } },
