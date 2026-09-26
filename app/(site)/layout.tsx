@@ -6,6 +6,7 @@ import { Footer } from '@/components/layout/Footer'
 import { AnnouncementBanner } from '@/components/layout/AnnouncementBanner'
 import { PageTransitionWrapper } from '@/components/layout/PageTransitionWrapper'
 import { SpeedInsights } from '@vercel/speed-insights/next'
+import { Analytics } from '@vercel/analytics/next'
 
 export default async function SiteLayout({ children }: { children: React.ReactNode }) {
   const [settings, announcement] = await Promise.all([
@@ -22,6 +23,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
       </PageTransitionWrapper>
       <Footer settings={settings} />
       <SpeedInsights />
+      <Analytics />
     </div>
   )
 }
