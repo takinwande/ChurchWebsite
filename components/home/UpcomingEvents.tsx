@@ -1,16 +1,18 @@
 import Link from 'next/link'
-import { CalendarDays, MapPin } from 'lucide-react'
+import { CalendarDays, MapPin, Phone } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { formatShortDate } from '@/lib/utils'
+import { formatShortDate, formatPhoneNumber } from '@/lib/utils'
 import type { Event } from '@/lib/types'
 import { FadeIn, StaggerContainer, StaggerItem } from '@/components/animation'
 
 interface UpcomingEventsProps {
   events: Event[]
+  /** Prayer Line call-in number from Site Settings, shown on events flagged as Prayer Line Events. */
+  prayerLinePhone?: string
 }
 
-export function UpcomingEvents({ events }: UpcomingEventsProps) {
+export function UpcomingEvents({ events, prayerLinePhone }: UpcomingEventsProps) {
   if (!events || events.length === 0) return null
 
   return (
@@ -45,6 +47,15 @@ export function UpcomingEvents({ events }: UpcomingEventsProps) {
                         <div className="mt-2 flex items-center gap-1 text-xs text-muted-foreground">
                           <MapPin className="h-3 w-3 shrink-0" aria-hidden="true" />
                           <span>{event.location}</span>
+                        </div>
+                      )}
+                      {event.isPrayerLine && prayerLinePhone && (
+                        // Plain text, not a tel: link — this whole card is already a Link to
+                        // the event page, and an anchor can't nest inside another anchor.
+                        // The tap-to-call link lives on the event detail page instead.
+                        <div className="mt-2 flex items-center gap-1 text-xs font-medium text-primary">
+                          <Phone className="h-3 w-3 shrink-0" aria-hidden="true" />
+                          <span>Call {formatPhoneNumber(prayerLinePhone)}</span>
                         </div>
                       )}
                     </CardContent>

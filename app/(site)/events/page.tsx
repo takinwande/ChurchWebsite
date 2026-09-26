@@ -18,10 +18,11 @@ export default async function EventsPage() {
   // The window is editable in Site Settings, so it has to be read before the
   // events query can be built — hence the sequential fetch rather than a
   // parallel one. Under ISR this runs once per revalidation, not per request.
-  const settings = await client.fetch<Pick<SiteSettings, 'pastEventsWindowDays'>>(
+  const settings = await client.fetch<Pick<SiteSettings, 'pastEventsWindowDays' | 'prayerLinePhone'>>(
     EVENT_WINDOW_SETTING_QUERY
   )
   const windowDays = resolvePastEventsWindowDays(settings?.pastEventsWindowDays)
+  const prayerLinePhone = settings?.prayerLinePhone
 
   // Grouped and windowed in GROQ — anything older than the past window is never
   // fetched, so the list stays current without anyone pruning events by hand.
@@ -52,7 +53,7 @@ export default async function EventsPage() {
               {upcoming.map((event) => (
                 <StaggerItem key={event._id}>
                   <AnimatedCard>
-                    <EventCard event={event} isPast={false} />
+                    <EventCard event={event} isPast={false} prayerLinePhone={prayerLinePhone} />
                   </AnimatedCard>
                 </StaggerItem>
               ))}
@@ -75,7 +76,7 @@ export default async function EventsPage() {
               {past.map((event) => (
                 <StaggerItem key={event._id}>
                   <AnimatedCard>
-                    <EventCard event={event} isPast />
+                    <EventCard event={event} isPast prayerLinePhone={prayerLinePhone} />
                   </AnimatedCard>
                 </StaggerItem>
               ))}

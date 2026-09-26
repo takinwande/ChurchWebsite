@@ -42,6 +42,7 @@ export interface SiteSettings {
   givingUrl?: string
   livestreamUrl?: string
   notificationEmail?: string
+  prayerLinePhone?: string
   /** Days a finished event stays under "Recently Past". Blank falls back to the default. */
   pastEventsWindowDays?: number
 }
@@ -117,6 +118,7 @@ export interface Event {
   location?: string
   description?: PortableTextBlock[]
   registrationUrl?: string
+  isPrayerLine?: boolean
   featured?: boolean
   image?: SanityImage
   imageUrl?: string

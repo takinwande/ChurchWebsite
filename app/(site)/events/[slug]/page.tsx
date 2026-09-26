@@ -2,14 +2,14 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { client } from '@/lib/sanity/client'
-import { EVENT_BY_SLUG_QUERY, EVENTS_QUERY } from '@/lib/sanity/queries'
-import type { Event } from '@/lib/types'
+import { EVENT_BY_SLUG_QUERY, EVENTS_QUERY, PRAYER_LINE_PHONE_QUERY } from '@/lib/sanity/queries'
+import type { Event, SiteSettings } from '@/lib/types'
 import { PortableTextRenderer } from '@/components/portable-text/PortableTextRenderer'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
-import { formatDateTime, formatShortDate } from '@/lib/utils'
-import { ChevronLeft, CalendarDays, MapPin, ExternalLink, Clock } from 'lucide-react'
+import { formatDateTime, formatShortDate, formatPhoneNumber } from '@/lib/utils'
+import { ChevronLeft, CalendarDays, MapPin, ExternalLink, Clock, Phone } from 'lucide-react'
 import { SlideUp, FadeIn } from '@/components/animation'
 
 export const revalidate = 300
@@ -35,6 +35,11 @@ export async function generateStaticParams() {
 export default async function EventDetailPage({ params }: EventPageProps) {
   const event = await client.fetch<Event>(EVENT_BY_SLUG_QUERY, { slug: params.slug })
   if (!event) notFound()
+
+  const settings = event.isPrayerLine
+    ? await client.fetch<Pick<SiteSettings, 'prayerLinePhone'>>(PRAYER_LINE_PHONE_QUERY)
+    : null
+  const prayerLinePhone = settings?.prayerLinePhone
 
   const isPast = new Date(event.startDateTime) < new Date()
 
@@ -77,6 +82,17 @@ export default async function EventDetailPage({ params }: EventPageProps) {
                 <div className="flex items-center gap-3">
                   <MapPin className="h-5 w-5 shrink-0 text-primary" aria-hidden="true" />
                   <p className="text-sm text-foreground">{event.location}</p>
+                </div>
+              )}
+              {event.isPrayerLine && prayerLinePhone && (
+                <div className="flex items-center gap-3">
+                  <Phone className="h-5 w-5 shrink-0 text-primary" aria-hidden="true" />
+                  <a
+                    href={`tel:${prayerLinePhone.replace(/\D/g, '')}`}
+                    className="text-sm font-medium text-foreground hover:text-primary transition-colors"
+                  >
+                    Call the Prayer Line: {formatPhoneNumber(prayerLinePhone)}
+                  </a>
                 </div>
               )}
             </div>

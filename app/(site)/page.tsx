@@ -55,7 +55,7 @@ export default async function HomePage() {
       <BuildingFundCTA campaign={campaign} />
       <FliersSection fliers={activeFliers ?? []} />
       <LatestSermon sermon={latestSermon} />
-      <UpcomingEvents events={upcomingEvents ?? []} />
+      <UpcomingEvents events={upcomingEvents ?? []} prayerLinePhone={settings?.prayerLinePhone} />
       <AboutTeaser />
     </>
   )
