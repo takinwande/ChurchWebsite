@@ -67,6 +67,13 @@ export const siteSettings = defineType({
       initialValue: 10,
       validation: (r) => r.min(0).max(365).integer(),
     }),
+    defineField({
+      name: 'prayerLinePhone',
+      title: 'Prayer Line Phone',
+      type: 'string',
+      description:
+        'Call-in number for prayer line events. Shown (with a tap-to-call link) on any event marked "Prayer Line Event".',
+    }),
     defineField({ name: 'givingUrl', title: 'Online Giving URL', type: 'url' }),
     defineField({ name: 'livestreamUrl', title: 'Livestream URL', type: 'url' }),
     defineField({

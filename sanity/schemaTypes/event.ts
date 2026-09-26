@@ -39,6 +39,14 @@ export const event = defineType({
       ],
     }),
     defineField({ name: 'registrationUrl', title: 'Registration URL (optional)', type: 'url' }),
+    defineField({
+      name: 'isPrayerLine',
+      title: 'Prayer Line Event',
+      type: 'boolean',
+      initialValue: false,
+      description:
+        'Shows the Prayer Line phone number (set in Site Settings) on this event\'s card and detail page, with a tap-to-call link.',
+    }),
     defineField({ name: 'featured', title: 'Featured', type: 'boolean', initialValue: false }),
     defineField({ name: 'image', title: 'Event Image', type: 'image', options: { hotspot: true } }),
   ],

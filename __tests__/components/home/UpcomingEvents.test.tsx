@@ -72,4 +72,24 @@ describe('UpcomingEvents', () => {
     render(<UpcomingEvents events={[makeEvent()]} />)
     expect(screen.getByRole('region', { name: 'Upcoming events' })).toBeInTheDocument()
   })
+
+  it('renders the prayer line phone number when isPrayerLine and a phone number are both present', () => {
+    render(
+      <UpcomingEvents
+        events={[makeEvent({ isPrayerLine: true })]}
+        prayerLinePhone="6235551234"
+      />
+    )
+    expect(screen.getByText(/call.*623.*555.*1234/i)).toBeInTheDocument()
+  })
+
+  it('does not render a phone number when isPrayerLine is false', () => {
+    render(<UpcomingEvents events={[makeEvent()]} prayerLinePhone="6235551234" />)
+    expect(screen.queryByText(/call/i)).not.toBeInTheDocument()
+  })
+
+  it('does not render a phone number when isPrayerLine is true but none is configured', () => {
+    render(<UpcomingEvents events={[makeEvent({ isPrayerLine: true })]} />)
+    expect(screen.queryByText(/call/i)).not.toBeInTheDocument()
+  })
 })

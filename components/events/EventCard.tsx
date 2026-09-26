@@ -1,9 +1,9 @@
 import Link from 'next/link'
-import { CalendarDays, MapPin, ExternalLink } from 'lucide-react'
+import { CalendarDays, MapPin, ExternalLink, Phone } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { formatShortDate } from '@/lib/utils'
+import { formatShortDate, formatPhoneNumber } from '@/lib/utils'
 import type { Event } from '@/lib/types'
 
 interface EventCardProps {
@@ -18,9 +18,11 @@ interface EventCardProps {
    * it under Upcoming.
    */
   isPast?: boolean
+  /** Prayer Line call-in number from Site Settings, shown when the event is flagged as a Prayer Line Event. */
+  prayerLinePhone?: string
 }
 
-export function EventCard({ event, isPast = false }: EventCardProps) {
+export function EventCard({ event, isPast = false, prayerLinePhone }: EventCardProps) {
 
   return (
     <Card className={`flex flex-col h-full transition-shadow hover:shadow-md ${isPast ? 'opacity-70' : ''}`}>
@@ -54,6 +56,16 @@ export function EventCard({ event, isPast = false }: EventCardProps) {
             <MapPin className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
             <span>{event.location}</span>
           </div>
+        )}
+
+        {event.isPrayerLine && prayerLinePhone && (
+          <a
+            href={`tel:${prayerLinePhone.replace(/\D/g, '')}`}
+            className="mt-1.5 flex items-center gap-1.5 text-xs font-medium text-primary hover:underline"
+          >
+            <Phone className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+            <span>Call {formatPhoneNumber(prayerLinePhone)}</span>
+          </a>
         )}
 
         <div className="mt-auto pt-4 flex gap-2">

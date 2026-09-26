@@ -109,4 +109,22 @@ describe('EventCard', () => {
       '/events/church-picnic'
     )
   })
+
+  it('renders a tap-to-call prayer line link when isPrayerLine and a phone number are both present', () => {
+    const event: Event = { ...futureEvent, isPrayerLine: true }
+    render(<EventCard event={event} prayerLinePhone="6235551234" />)
+    const link = screen.getByRole('link', { name: /call.*623.*555.*1234/i })
+    expect(link).toHaveAttribute('href', 'tel:6235551234')
+  })
+
+  it('does not render the prayer line link when isPrayerLine is false', () => {
+    render(<EventCard event={futureEvent} prayerLinePhone="6235551234" />)
+    expect(screen.queryByText(/call/i)).not.toBeInTheDocument()
+  })
+
+  it('does not render the prayer line link when isPrayerLine is true but no phone number is configured', () => {
+    const event: Event = { ...futureEvent, isPrayerLine: true }
+    render(<EventCard event={event} />)
+    expect(screen.queryByText(/call/i)).not.toBeInTheDocument()
+  })
 })

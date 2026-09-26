@@ -4,13 +4,18 @@ export const SITE_SETTINGS_QUERY = groq`
   *[_type == "siteSettings"][0]{
     _id, name, tagline, logo, address, phone, email,
     serviceTimes, socialLinks, givingUrl, livestreamUrl,
-    heroImages, notificationEmail, pastEventsWindowDays
+    heroImages, notificationEmail, pastEventsWindowDays, prayerLinePhone
   }
 `
 
-/** Just the events window — the events page needs it before it can query events. */
+/** Just the settings the events page needs before it can query events. */
 export const EVENT_WINDOW_SETTING_QUERY = groq`
-  *[_type == "siteSettings"][0]{ pastEventsWindowDays }
+  *[_type == "siteSettings"][0]{ pastEventsWindowDays, prayerLinePhone }
+`
+
+/** Just the prayer line number — the event detail page needs it to show the call-in link. */
+export const PRAYER_LINE_PHONE_QUERY = groq`
+  *[_type == "siteSettings"][0]{ prayerLinePhone }
 `
 
 export const ANNOUNCEMENT_QUERY = groq`
@@ -39,7 +44,7 @@ export const LATEST_SERMON_QUERY = groq`
 // moment its start time passes.
 export const UPCOMING_EVENTS_QUERY = groq`
   *[_type == "event" && startDateTime >= $todayStart] | order(startDateTime asc)[0...3]{
-    _id, title, slug, startDateTime, endDateTime, location,
+    _id, title, slug, startDateTime, endDateTime, location, isPrayerLine,
     "imageUrl": image.asset->url
   }
 `
@@ -84,7 +89,7 @@ export const SERMON_BY_SLUG_QUERY = groq`
 
 const EVENT_LIST_FIELDS = `
   _id, title, slug, startDateTime, endDateTime,
-  location, registrationUrl, featured,
+  location, registrationUrl, featured, isPrayerLine,
   "imageUrl": image.asset->url
 `
 
@@ -107,7 +112,7 @@ export const EVENTS_QUERY = groq`
 export const EVENT_BY_SLUG_QUERY = groq`
   *[_type == "event" && slug.current == $slug][0]{
     _id, title, slug, startDateTime, endDateTime,
-    location, description, registrationUrl, featured,
+    location, description, registrationUrl, featured, isPrayerLine,
     image, "imageUrl": image.asset->url
   }
 `
